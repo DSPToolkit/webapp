@@ -6,9 +6,9 @@ In the current version, a filter can be designed via:
 - IIR design using Butterworth method.
 
 After designing a fitler, the web app:
-- Computes the the magnitude and phase of the filter’s frequency response
-- Generates the filter coefficients
-- Visualizes the filter's output on a various input signals
+- Computes the the magnitude and phase of the filter’s frequency response.
+- Generates the filter coefficients.
+- Visualizes the filter's output on a various input signals.
 
 ## Getting Started
 To use the app, simply visit [dsptoolkit.github.io/webapp/](https://dsptoolkit.github.io/webapp/).
