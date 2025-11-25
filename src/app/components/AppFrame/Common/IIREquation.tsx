@@ -14,7 +14,7 @@ export const IIREquation = ({ filterCoefficients }) => {
       }
     }
 
-    for (let i = 0; i < filterCoefficients.den.length; i++) {
+    for (let i = 1; i < filterCoefficients.den.length; i++) {
 
       if (filterCoefficients.den[i] != 0) {
         output += (Number(filterCoefficients.den[i]) > 0 ? " - " : " + ") + ( Number(filterCoefficients.den[i]) == 1 ? "" : String(Math.abs(Number(filterCoefficients.den[i])).toFixed(2))) + 
