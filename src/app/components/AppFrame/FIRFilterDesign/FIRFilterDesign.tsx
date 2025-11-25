@@ -49,8 +49,6 @@ export const FIRFilterDesign = () => {
             if (i == N / 2) array[i] = w2 / Math.PI; // TODO: Check whether this is correct
             else array[i] = 1 / (Math.PI * (i - (N / 2))) * (Math.sin(Math.PI * (i - N / 2)) - Math.sin(w2 * (i - N / 2)));
         }
-        console.log("AA")
-
         return array;
     }
 
