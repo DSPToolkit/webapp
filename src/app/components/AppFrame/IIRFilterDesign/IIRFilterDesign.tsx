@@ -12,7 +12,7 @@ export const IIRFilterDesign = () => {
 
     const [filterOrder, setFilterOrder] = useState(2);
     const [filterCoefficients, setFilterCoefficients] = useState<{ num: any[]; den: any[] }>({ num: [1], den: [] });
-    const [lowCutoff, setLowCutoff] = useState(0.5);
+    const [lowCutoff, setLowCutoff] = useState(0.4);
     const [highCutoff, setHighCutoff] = useState(0.9);
     const [chosenFilterType, setChosenFilterType] = useState(filterType.LOWPASS);
     const [chosenDesignMethodType, setChosenDesignMethodType] = useState(IIRfilterDesignMethod.BUTTERWORTH);
@@ -68,7 +68,7 @@ export const IIRFilterDesign = () => {
         // 3. Convert the analog filter to digital filter (bilinear transform)
 
         // 1:
-        const Omega_c = 2 * Math.tan(highCutoff / 2);
+        const Omega_c = 2 * Math.tan(lowCutoff / 2);
         // 2: 
         let poles = getCausalButterworthPoles(filterOrder, Omega_c);
         const h_of_s = H_of_s(poles, Omega_c, chosenFilterType);
