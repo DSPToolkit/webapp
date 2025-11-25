@@ -182,6 +182,7 @@ export const FilterTest = ({ filterCoefficients }) => {
 
 
   const filter = (signal, filterCoefficients) => {
+    console.log(filterCoefficients)
     const y_buffer = new Array(filterCoefficients.den.length).fill(0);
     let result = [];
 
