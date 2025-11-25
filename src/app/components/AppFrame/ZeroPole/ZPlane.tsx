@@ -53,7 +53,7 @@ export const ZPlane = ({ points, updatePoint, updateMagnitudeResponse, updatePha
         den = tmp;
 
         if (!num) num = [1];
-        if (!den) den = [0];
+        if (!den) den = [1];
         return { num: num, den: den }
     }
 
