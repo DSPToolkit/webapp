@@ -6,32 +6,20 @@ export const IIREquation = ({ filterCoefficients }) => {
 
   const constructFilterEquationString = (filterCoefficients) => {
     if(filterCoefficients.num.length == 0 && filterCoefficients.den.length == 0) return "y[n] = x[n]";
-    let output = "y[n] = ";
-    for (let i = 0; i < filterCoefficients.num.length; i++) {
-      if (filterCoefficients.num[i] == 1)
-        output += "x[n]";
-      else output += String(Math.abs(Number(filterCoefficients.num[i])).toFixed(2)) + "x[n" + (i != 0 ? "-" + String(i) + "]" : "]");
-      if (i < filterCoefficients.num.length - 1 && filterCoefficients.num.length > 1)
-        if (filterCoefficients.num[i + 1] > 0)
-          output += " + ";
-        else
-          output += " - ";
-    }
-    if (filterCoefficients.num.length > 0 && (filterCoefficients.den.length > 0 && filterCoefficients.den[1])) {
-      output += " + ";
+    let output = "y[n] = x[n]";
+    for (let i = 1; i < filterCoefficients.num.length; i++) {
+      if (filterCoefficients.num[i] != 0) {
+        output += (Number(filterCoefficients.num[i]) < 0 ? " - " : " + ") + ( Number(filterCoefficients.num[i]) == 1 ? "" : String(Math.abs(Number(filterCoefficients.num[i])).toFixed(2))) + 
+          ( i == 0 ? "x[n]" : "x[n" + ("-" + String(i) + "]" ))
+      }
     }
 
-    for (let i = 1; i < filterCoefficients.den.length; i++) {
-
+    for (let i = 0; i < filterCoefficients.den.length; i++) {
 
       if (filterCoefficients.den[i] != 0) {
-        output += String(Math.abs(Number(filterCoefficients.den[i])).toFixed(2)) + "y[n" + ("-" + String(i) + "]" )
+        output += (Number(filterCoefficients.den[i]) > 0 ? " - " : " + ") + ( Number(filterCoefficients.den[i]) == 1 ? "" : String(Math.abs(Number(filterCoefficients.den[i])).toFixed(2))) + 
+          ( i == 0 ? "y[n]" : "y[n" + ("-" + String(i) + "]" ))
       }
-      if (i != filterCoefficients.den.length - 1)
-        if (filterCoefficients.den[i + 1] > 0)
-          output += " + ";
-        else
-          output += " - ";
     }
     return output;
   }

@@ -18,7 +18,7 @@ Afterwards:
 - Clone the repository:
 ```shell
 git clone git@github.com:DSPToolkit/webapp.git
-cd filterDesigner
+cd webapp
 ```
 - Install the dependencies:
 ```shell
