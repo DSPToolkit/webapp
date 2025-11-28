@@ -130,13 +130,37 @@ export const bilinearTransform = (coeff: { num: any[]; den: any[] }) => { // Rec
     return { num: resNum, den: resDen };
 }
 
-export const transformAnalogLowpassToHighpass = (arr, numberOfPoles, Omega_c, target_freq) => {
-    for (let i = 0; i < arr.length - 1; i++)
-        arr.den[i] *= Math.pow(Omega_c * target_freq, arr.length - i - 1);
-    return {
-        num: Array(arr.den.length).fill(0).map((_, index) => index == 0 ? Math.pow(Omega_c, numberOfPoles) : 0)
-        , den: arr.den.reverse()
+export const transformAnalogLowpassToHighpass = (poles, Omega_c) => {
+    const hpPoles = poles.map(p => {
+        const denom = p.re * p.re + p.im * p.im;
+        return complex(
+            (Omega_c * Omega_c * p.re) / denom,
+            (-Omega_c * Omega_c * p.im) / denom
+        );
+    });
+
+    let tmp = [];
+    for (let i = 0; i < hpPoles.length; i++) {
+        tmp.push([1, complex(-hpPoles[i].re, -hpPoles[i].im)]);
     }
+
+    let tmp2 = tmp[0];
+    for (let i = 1; i < tmp.length; i++) {
+        tmp2 = convolve(tmp2, tmp[i]);
+    }
+    let convRes = tmp2;
+
+    let den = [1];
+    for (let i = 1; i < convRes.length; i++) {
+        den.push(convRes[i].re);
+    }
+
+    let num = new Array(poles.length + 1).fill(0);
+    num[0] = Math.pow(Omega_c, poles.length);
+    
+    const gain = num[0] / den[0];
+    num = num.map(c => c / gain);
+    return { num: num, den : den };
 }
 
 export const getCausalButterworthPoles = (N, Omega_c) => { // N = Filter Order
@@ -160,20 +184,24 @@ export const H_of_s = (poles, Omega_c, type) => {
         tmp2 = convolve(tmp2, tmp[i]);
     }
     convRes = tmp2;
-    let res = [1];
+    let den = [1];
     for (let i = 1; i < convRes.length; i++) {
-        res.push(convRes[i].re);
+        den.push(convRes[i].re);
     }
 
-    const tf = { num: [Math.pow(Omega_c, poles.length)], den: res };
+    const tf = { num: [Math.pow(Omega_c, poles.length)], den: den };
     switch (type) {
         case filterType.LOWPASS:
             return tf;
         case filterType.HIGHPASS:
-            return transformAnalogLowpassToHighpass(tf, poles.length, Omega_c, Omega_c);
+            return transformAnalogLowpassToHighpass(poles, Omega_c);
     }
 }
 
 export const countNumberOfOccurrences = (str, c) => {
     return str.split(c).length-1;
+}
+
+export const eulers_integration = () => {
+    return ;
 }
