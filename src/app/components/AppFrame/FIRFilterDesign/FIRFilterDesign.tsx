@@ -18,7 +18,6 @@ export const FIRFilterDesign = () => {
     const [chosenFilterType, setChosenFilterType] = useState(filterType.LOWPASS);
     const [chosenWindowType, setChosenWindowType] = useState(windowType.RECTANGULAR);
 
-
     const [magnitudeResponse, setMagnitudeResponse] = useState({
         xValues: Array.from({ length: 1024 }, (_, i) => i / 1024 * Math.PI),
         yValues: Array.from({ length: 1024 }, (_, i) => 0)
@@ -27,7 +26,7 @@ export const FIRFilterDesign = () => {
     const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
         let array = new Array(N).fill(0);
         for (let i = 0; i < N; i++) {
-            if (i == N / 2) array[i] = cutOffFreq / Math.PI; // TODO: Check whether this is correct
+            if (i == N / 2) array[i] = cutOffFreq / Math.PI;
             else array[i] = 1 / (Math.PI * (i - (N / 2))) * Math.sin(cutOffFreq * (i - N / 2));
         }
         return array;
@@ -36,19 +35,10 @@ export const FIRFilterDesign = () => {
     const bandPassImpulseResponse = (w1, w2, N = 1024) => {
         let array = new Array(N).fill(0);
         for (let i = 0; i < N; i++) {
-            if (i == N / 2) array[i] = w1 / Math.PI; // TODO: Check whether this is correct
+            if (i - (N / 2) === 0) array[i] = (w2 - w1) / Math.PI;
             else array[i] = 1 / (Math.PI * (i - (N / 2))) * (Math.sin(w1 * (i - N / 2)) - Math.sin(w2 * (i - N / 2)));
         }
 
-        return array;
-    }
-
-    const bandStopImpulseResponse = (w1, w2, N = 1024) => {
-        let array = new Array(N).fill(0);
-        for (let i = 0; i < N; i++) {
-            if (i == N / 2) array[i] = w2 / Math.PI; // TODO: Check whether this is correct
-            else array[i] = 1 / (Math.PI * (i - (N / 2))) * (Math.sin(Math.PI * (i - N / 2)) - Math.sin(w2 * (i - N / 2)));
-        }
         return array;
     }
 
