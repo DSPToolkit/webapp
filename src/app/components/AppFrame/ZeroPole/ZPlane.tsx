@@ -278,12 +278,12 @@ export const ZPlane = ({ points, updatePoint, updateMagnitudeResponse, updatePha
                     <button onClick={resetSelected} className="h-12 my-2 mx-2 px-7 bg-gray-200 text-black text-lg rounded-lg hover:bg-gray-300">Reset</button>
                 </div>
                 <div className="relative group">
-                <button className="w-11 h-11 bg-gray-200 text-black text-lg rounded-full hover:bg-gray-300">
-                    ?
-                </button>
-                <div className="pointer-events-none z-50 absolute right-0 top-10 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                    The figure shows the Z-plane. Choose your desired locations of poles and zero, and then click on "Design Filter".
-                </div>
+                    <button className="w-11 h-11 bg-gray-200 text-black text-lg rounded-full hover:bg-gray-300">
+                        ?
+                    </button>
+                    <div className="pointer-events-none z-50 absolute right-0 top-10 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                        The figure shows the Z-plane. Choose your desired locations of poles and zero, and then click on "Design Filter".
+                    </div>
                 </div>       
             </div>
             <div>
@@ -335,7 +335,7 @@ export const ZPlane = ({ points, updatePoint, updateMagnitudeResponse, updatePha
             </div>
 
             <div className="flex">
-                <button onClick={generateResponse} className="flex-grow h-12 my-2 mx-2 px-7 bg-indigo-700 text-white text-lg rounded-lg hover:bg-blue-800">Design Filter</button>
+                <button onClick={generateResponse} className="flex-grow h-12 my-2 mx-2 px-7 bg-indigo-600 text-white text-lg rounded-lg hover:bg-blue-800">Design Filter</button>
             </div>
         </div>
     )
