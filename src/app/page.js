@@ -38,7 +38,7 @@ export default function Home() {
               Features include designing filters by placing <b>poles and zeroes on the Z-plane</b>, FIR filter design using <b>windowing method</b> and IIR design using <b>Butterworth</b> method.
             </p>
             <p>
-              For additional information regarding the project visit:
+              For additional information visit:
             </p>
             <br></br>
             <p><a className="text-blue-600" href="https://github.com/DSPToolkit/webapp">GitHub.com/DSPToolkit/webapp</a></p>
