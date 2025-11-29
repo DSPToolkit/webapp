@@ -32,26 +32,33 @@ export const FIRFilterDesign = () => {
         return array;
     }
 
-    const bandPassImpulseResponse = (w1, w2, N = 1024) => {
+    const bandpassImpulseResponse = (w1, w2, N = 1024) => {
         let array = new Array(N).fill(0);
+        const mid = Math.floor(N / 2); // Math.floor() is necessary to make it work for both odd and even Ns
+
         for (let i = 0; i < N; i++) {
-            if (i - (N / 2) === 0) array[i] = (w2 - w1) / Math.PI;
-            else array[i] = 1 / (Math.PI * (i - (N / 2))) * (Math.sin(w1 * (i - N / 2)) - Math.sin(w2 * (i - N / 2)));
+            const k = i - mid;
+            if (k == 0) {
+                array[i] = (w2 - w1) / Math.PI;
+            } else {
+                array[i] = (Math.sin(w2 * k) - Math.sin(w1 * k)) / (Math.PI * k);
+            }
         }
 
         return array;
-    }
+    };
 
+    // TODO: use w1 and w2 later. they're not being used rn.
     const getImpulseResponse = (w1, w2, N = 1024) => {
         switch (chosenFilterType) {
             case "Low-pass":
                 return lowPassImpulseResponse(highCutoff, N);
             case "High-pass":
-                return bandPassImpulseResponse(Math.PI, lowCutoff, N);
+                return bandpassImpulseResponse(Math.PI, lowCutoff, N);
             case "Band-pass":
-                return bandPassImpulseResponse(lowCutoff, highCutoff, N);
+                return bandpassImpulseResponse(lowCutoff, highCutoff, N);
             case "Band-stop":
-                return elementWiseAdd(bandPassImpulseResponse(Math.PI, highCutoff, N), lowPassImpulseResponse(lowCutoff, N));
+                return elementWiseAdd(bandpassImpulseResponse(Math.PI, highCutoff, N), lowPassImpulseResponse(lowCutoff, N));
         }
     }
     const elementWiseAdd = (arr1, arr2) => {
