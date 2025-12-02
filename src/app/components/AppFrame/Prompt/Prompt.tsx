@@ -9,7 +9,6 @@ export const Prompt = () => {
   const handleButton = () => parse(cmd, log, (e) => setLog(e), (e) => setCmd(e));
 
   return (
-
     <div className="w-full flex flex-col mb-5 shadow rounded">
       <div className="bg-white flex-1 p-5 text-slate-600 overflow-y-auto w-full">
         <div className="flex flex-col">
