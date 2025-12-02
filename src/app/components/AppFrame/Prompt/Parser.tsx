@@ -1,4 +1,4 @@
-import { countNumberOfOccurrences, filter } from "../Common/Utils";
+import { countNumberOfOccurrences, filter, lowPassImpulseResponse, bandpassImpulseResponse, elementWiseMultiply, elementWiseAdd,  Hamming, Bartlett, Han} from "../Common/Utils";
 
 let vars = {};
 const INVALID_COMMAND_MESSAGE = "Invalid usage! Type 'help' for assistance.";
@@ -10,7 +10,9 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
         variableDecl: /\s*([a-z]+)\s*=\s*\[(.*)\]\s*$/,
         listVariables: /^\s*list\s*$/,
         clearVariables: /^\s*reset\s*$/,
-        filter: /^\s*filter\s*\((.*)\)\s*$/
+        filter: /^\s*filter\s*\((.*)\)\s*$/,
+        windowing: /^^\s*windowing\s*\(\s*(lowpass|highpass|bandpass|bandstop)\s*,\s*(rectangular|hamming|han|bartlett)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)(?:\s*,\s*([0-9]*\.?[0-9]+))?\s*\)\s*$/
+
     }
 
     const patterns = [
@@ -21,6 +23,7 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
         { regex: rgx.listVariables, action: () => listVariables(log, updateLog) },
         { regex: rgx.clearVariables, action: () => clearVariables(log, updateLog) },
         { regex: rgx.filter, action: () => execFilter(rgx.filter, cmd, log, updateLog) },
+        { regex: rgx.windowing, action: () => execWindowing(rgx.windowing, cmd, log, updateLog) },
     ];
 
     for (let i = 0; i < patterns.length; i++) {
@@ -46,7 +49,15 @@ const help = (log, updateLog) => {
         "\nVariable decleration:",
         "\t a = [x y z] - Declares a list named 'a' with the elements x, y and z.",
         "\nAvailable methods:",
-        "\t'filter(x,a,b)' - Performs filtering on the input 'x', with the coefficients of its transfer function \n\tdefined using the list 'a' for the numerator and the list 'b' for the denominator."
+        "\tfilter(x,a,b) - Performs filtering on the input 'x', with the coefficients of its transfer function \n\tdefined using the list 'a' for the numerator and the list 'b' for the denominator.",
+        "\t\n",
+        "\twindowing(filter_type, window_type, N, w_c, w_s) - Designs a filter with the windowing method.\t",
+        "\t\tfilter_type: 'lowpass', 'highpass', 'bandpass' or 'banstop' - Type of the filter\n",
+        "\t\twindow_type: 'rectangular', 'hamming', 'han', 'bartlett' - Type of the window \n",
+        "\t\tN: An integer - Filter order \n",
+        "\t\tw_c: A float - Normalized frequency in radians per samples denoting start of cutoff frequency\n",
+        "\t\tw_s (optional): A float - Normalized frequency in radians per samples denoting stop cutoff frequency for BP and BS filter\n",
+
     ];
     updateLog(log.concat(text));
 }
@@ -131,3 +142,49 @@ const execFilter = (rgx, cmd, log, updateLog) => {
     const text = ["\n", "[" + filter(x, { den: den, num: num }).toString() + "]"]
     updateLog(log.concat(text));
 }
+
+const getImpulseResponse = (w1, w2, filter_type, N = 1024) => {
+    switch (filter_type) {
+        case "lowpass":
+            return lowPassImpulseResponse(w1, N);
+        case "highpass":
+            return bandpassImpulseResponse(Math.PI, w1, N);
+        case "bandpass":
+            return bandpassImpulseResponse(w1, w2, N);
+        case "bandstop":
+            return elementWiseAdd(bandpassImpulseResponse(Math.PI, w1, N), lowPassImpulseResponse(lowCutoff, N));
+    }
+}
+
+const execWindowing = (rgx, cmd, log, updateLog) => {
+
+    const match = rgx.exec(cmd);
+    let filter_type = match[1];
+    let w_1 = match[4];
+    let w_2 = match[5];
+    if(w_2 && (filter_type == 'lowpass' || filter_type == 'highpass')){
+        const text = ["\n", "Error: Second cutoff frequency should not be specified for lowpass and highpass filters!"]
+        updateLog(log.concat(text));
+        return;
+    }
+    let N = match[3];
+    let x = [];
+
+    switch (match[2]) {
+        case "rectangular":
+            x = getImpulseResponse(w_1, w_1, filter_type, N);
+            break;
+        case "bartlett":
+            x = elementWiseMultiply(getImpulseResponse(w_1, w_2, N), Bartlett(N))
+            break;
+        case "hamming":
+            x = elementWiseMultiply(getImpulseResponse(w_1, w_2, N), Hamming(N))
+            break;
+        case "han":
+            x = elementWiseMultiply(getImpulseResponse(w_1, w_2, N), Han(N))
+            break;
+    }
+    const text = ["\n", "> " + cmd, x.join(' ')]
+    updateLog(log.concat(text));
+}
+

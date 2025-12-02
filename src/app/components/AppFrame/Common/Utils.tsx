@@ -205,3 +205,79 @@ export const countNumberOfOccurrences = (str, c) => {
 export const eulers_integration = () => {
     return ;
 }
+
+export const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
+        let array = new Array(N).fill(0);
+        for (let i = 0; i < N; i++) {
+            if (i == N / 2) array[i] = cutOffFreq / Math.PI;
+            else array[i] = 1 / (Math.PI * (i - (N / 2))) * Math.sin(cutOffFreq * (i - N / 2));
+        }
+        return array;
+    }
+
+export const bandpassImpulseResponse = (w1, w2, N = 1024) => {
+    let array = new Array(N).fill(0);
+    const mid = Math.floor(N / 2); // Math.floor() is necessary to make it work for both odd and even Ns
+
+    for (let i = 0; i < N; i++) {
+        const k = i - mid;
+        if (k == 0) {
+            array[i] = (w2 - w1) / Math.PI;
+        } else {
+            array[i] = (Math.sin(w2 * k) - Math.sin(w1 * k)) / (Math.PI * k);
+        }
+    }
+
+    return array;
+};
+
+
+export const elementWiseAdd = (arr1, arr2) => {
+    console.assert(arr1.length == arr2.length);
+    let res = new Array(arr1.length);
+    for (let i = 0; i < arr1.length; i++) {
+        res[i] = arr1[i] + arr2[i];
+    }
+    return res;
+}
+
+export const elementWiseMultiply = (arr1, arr2) => {
+    console.assert(arr1.length == arr2.length);
+    let res = new Array(arr1.length);
+    for (let i = 0; i < arr1.length; i++) {
+        res[i] = arr1[i] * arr2[i];
+    }
+    return res;
+}
+
+export const Hamming = (M) => {
+    let array = new Array(M);
+    for (let i = 0; i < M; i++) {
+        array[i] = 0.54 - 0.46 * Math.cos((2 * Math.PI * i) / (M - 1))
+    }
+    return array;
+}
+
+export const Bartlett = (M) => {
+    let array = new Array(M);
+    for (let i = 0; i < M; i++) {
+        array[i] = 1 - (2*Math.abs(i - (M-1)/2))/(M-1);
+    }
+    return array;
+
+}
+
+export const Han = (M) => {
+    let array = new Array(M);
+    for (let i = 0; i < M; i++) {
+        array[i] = 0.5 * (1 - Math.cos((2*Math.PI*i)/(M-1)));
+    }
+    return array;
+}
+// TODO
+// export const Kaiser = (M, a) => {
+//     let array = new Array(M);
+//     for (let i = 0; i < M; i++) {
+//     }
+//     return array;
+// }
