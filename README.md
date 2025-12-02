@@ -1,4 +1,4 @@
-# DSPToolkit filter design web app
+# DSPToolkit web app
 A web app for designing and visualizing [digital filters](https://en.wikipedia.org/wiki/Digital_filter).
 In the current version, a filter can be designed via:
 - Visually placing poles and zeros on a Z-plane.
