@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Plot } from '../Common/Plot'
 import FFT from 'fft.js';
-import { Hamming, Bartlett, Han } from "./Window"
 import { Panel } from './Panel';
 import { windowType, filterType } from './enums';
 import { FilterTest } from '../Common/FilterTest';
 import { Equation } from '../Common/Equation';
-import { ZeroPad } from '../Common/Utils';
+import { ZeroPad, lowPassImpulseResponse, bandpassImpulseResponse, elementWiseMultiply, elementWiseAdd, Hamming, Bartlett, Han } from '../Common/Utils';
 
 export const FIRFilterDesign = () => {
     const [trigger, setTrigger] = useState(false);
@@ -23,31 +22,6 @@ export const FIRFilterDesign = () => {
         yValues: Array.from({ length: 1024 }, (_, i) => 0)
     });
 
-    const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
-        let array = new Array(N).fill(0);
-        for (let i = 0; i < N; i++) {
-            if (i == N / 2) array[i] = cutOffFreq / Math.PI;
-            else array[i] = 1 / (Math.PI * (i - (N / 2))) * Math.sin(cutOffFreq * (i - N / 2));
-        }
-        return array;
-    }
-
-    const bandpassImpulseResponse = (w1, w2, N = 1024) => {
-        let array = new Array(N).fill(0);
-        const mid = Math.floor(N / 2); // Math.floor() is necessary to make it work for both odd and even Ns
-
-        for (let i = 0; i < N; i++) {
-            const k = i - mid;
-            if (k == 0) {
-                array[i] = (w2 - w1) / Math.PI;
-            } else {
-                array[i] = (Math.sin(w2 * k) - Math.sin(w1 * k)) / (Math.PI * k);
-            }
-        }
-
-        return array;
-    };
-
     // TODO: use w1 and w2 later. they're not being used rn.
     const getImpulseResponse = (w1, w2, N = 1024) => {
         switch (chosenFilterType) {
@@ -61,25 +35,8 @@ export const FIRFilterDesign = () => {
                 return elementWiseAdd(bandpassImpulseResponse(Math.PI, highCutoff, N), lowPassImpulseResponse(lowCutoff, N));
         }
     }
-    const elementWiseAdd = (arr1, arr2) => {
-        console.assert(arr1.length == arr2.length);
-        let res = new Array(arr1.length);
-        for (let i = 0; i < arr1.length; i++) {
-            res[i] = arr1[i] + arr2[i];
-        }
-        return res;
-    }
 
-    const elementWiseMultiply = (arr1, arr2) => {
-        console.assert(arr1.length == arr2.length);
-        let res = new Array(arr1.length);
-        for (let i = 0; i < arr1.length; i++) {
-            res[i] = arr1[i] * arr2[i];
-        }
-        return res;
-    }
-
-    const computeFFT = () => {
+    const run = () => {
         const N = 1024;
         let out = {
             xValues: Array.from({ length: N / 2 }, (_, i) => i / N * 2 * Math.PI),
@@ -116,7 +73,7 @@ export const FIRFilterDesign = () => {
     }
 
     useEffect(() => {
-        computeFFT();
+        run();
     }, [trigger]);
 
     return (
