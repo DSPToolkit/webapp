@@ -11,7 +11,8 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
         listVariables: /^\s*list\s*$/,
         clearVariables: /^\s*reset\s*$/,
         filter: /^\s*filter\s*\((.*)\)\s*$/,
-        windowing: /^^\s*windowing\s*\(\s*(lowpass|highpass|bandpass|bandstop)\s*,\s*(rectangular|hamming|han|bartlett)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)(?:\s*,\s*([0-9]*\.?[0-9]+))?\s*\)\s*$/
+        windowing: /^^\s*windowing\s*\(\s*(lowpass|highpass|bandpass|bandstop)\s*,\s*(rectangular|hamming|han|bartlett)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)(?:\s*,\s*([0-9]*\.?[0-9]+))?\s*\)\s*$/,
+        butterworth: /^^\s*butterworth\s*\(\s*(lowpass|highpass)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)\)\s*$/
 
     }
 
@@ -44,12 +45,12 @@ const help = (log, updateLog) => {
         "Available commands:",
         "\t 'help' - Shows the help message",
         "\t 'version' - Shows the web apps version",
-        "\t 'clear' - Clears the screen.",
-        "\t 'reset' - Deletes the declared variables in your session.",
+        "\t 'clear' - Clears the screen",
+        "\t 'reset' - Deletes the declared variables in your session",
         "\nVariable decleration:",
-        "\t a = [x y z] - Declares a list named 'a' with the elements x, y and z.",
+        "\t a = [x y z] - Declares a list named 'a' with the elements x, y and z",
         "\nAvailable methods:",
-        "\tfilter(x,a,b) - Performs filtering on the input 'x', with the coefficients of its transfer function \n\tdefined using the list 'a' for the numerator and the list 'b' for the denominator.",
+        "\tfilter(x,a,b) - Performs filtering on the input 'x', with the coefficients of its transfer function \n\tdefined using the list 'a' for the numerator and the list 'b' for the denominator",
         "\t\n",
         "\twindowing(filter_type, window_type, N, w_c, w_s) - Designs a filter with the windowing method.\t",
         "\t\tfilter_type: 'lowpass', 'highpass', 'bandpass' or 'banstop' - Type of the filter\n",
