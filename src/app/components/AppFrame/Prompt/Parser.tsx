@@ -1,4 +1,5 @@
-import { countNumberOfOccurrences, filter, lowPassImpulseResponse, bandpassImpulseResponse, elementWiseMultiply, elementWiseAdd,  Hamming, Bartlett, Han} from "../Common/Utils";
+import { bilinearTransform, getCausalButterworthPoles, H_of_s, countNumberOfOccurrences, filter, lowPassImpulseResponse, bandpassImpulseResponse, elementWiseMultiply, elementWiseAdd,  Hamming, Bartlett, Han} from "../Common/Utils";
+import { filterType } from '../Common/enums';
 
 let vars = {};
 const INVALID_COMMAND_MESSAGE = "Invalid usage! Type 'help' for assistance.";
@@ -25,6 +26,7 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
         { regex: rgx.clearVariables, action: () => clearVariables(log, updateLog) },
         { regex: rgx.filter, action: () => execFilter(rgx.filter, cmd, log, updateLog) },
         { regex: rgx.windowing, action: () => execWindowing(rgx.windowing, cmd, log, updateLog) },
+        { regex: rgx.butterworth, action: () => execButterworth(rgx.butterworth, cmd, log, updateLog) },
     ];
 
     for (let i = 0; i < patterns.length; i++) {
@@ -58,7 +60,11 @@ const help = (log, updateLog) => {
         "\t\tN: An integer - Filter order \n",
         "\t\tw_c: A float - Normalized frequency in radians per samples denoting start of cutoff frequency\n",
         "\t\tw_s (optional): A float - Normalized frequency in radians per samples denoting stop cutoff frequency for BP and BS filter\n",
-
+        "\t\n",
+        "\tbutterworth(filter_type, N, w_c) - Designs a filter via Butterworth method.\t",
+        "\t\tfilter_type: 'lowpass' or 'highpass'' - Type of the filter\n",
+        "\t\tN: An integer - Filter order \n",
+        "\t\tw_c: A float - Normalized frequency in radians per samples denoting cutoff frequency\n",
     ];
     updateLog(log.concat(text));
 }
@@ -186,6 +192,32 @@ const execWindowing = (rgx, cmd, log, updateLog) => {
             break;
     }
     const text = ["\n", "> " + cmd, x.join(' ')]
+    updateLog(log.concat(text));
+}
+
+const execButterworth = (rgx, cmd, log, updateLog) => {
+    const match = rgx.exec(cmd);
+    let filter_type = match[1];
+    let N = match[2];
+    let w_c = match[3];
+    let x = [];
+    const Omega_c = 2 * Math.tan(w_c / 2);
+    // 2: 
+    let poles = getCausalButterworthPoles(N, Omega_c);
+    let h_of_s;
+    switch(filter_type)
+    {
+        case 'lowpass':
+            h_of_s = H_of_s(poles, Omega_c, filterType.LOWPASS);
+            break;
+        case 'highpass':
+            h_of_s = H_of_s(poles, Omega_c, filterType.HIGHPASS);
+            break;
+    }
+    // 3. 
+    const h_of_z = bilinearTransform(h_of_s);
+    
+    const text = ["\n", "> " + cmd, "num:" + h_of_z.num.join(' ') + " den:" + h_of_z.den.join(' ')]
     updateLog(log.concat(text));
 }
 
