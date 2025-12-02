@@ -152,7 +152,7 @@ const getImpulseResponse = (w1, w2, filter_type, N = 1024) => {
         case "bandpass":
             return bandpassImpulseResponse(w1, w2, N);
         case "bandstop":
-            return elementWiseAdd(bandpassImpulseResponse(Math.PI, w1, N), lowPassImpulseResponse(lowCutoff, N));
+            return elementWiseAdd(bandpassImpulseResponse(Math.PI, w1, N), lowPassImpulseResponse(w1, N));
     }
 }
 
