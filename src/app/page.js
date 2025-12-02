@@ -9,8 +9,8 @@ import { Prompt } from './components/AppFrame/Prompt/Prompt';
 export default function Home() {
   const items = [
     { placeholder: "Zero-pole placement", name: "zero_pole" },
-    { placeholder: "FIR Design", name: "fir_filter_design" },
-    { placeholder: "IIR Design", name: "iir_filter_design" },
+    { placeholder: "Windowing method", name: "fir_filter_design" },
+    { placeholder: "Analog-to-digital transform", name: "iir_filter_design" },
     { placeholder: "> Interactive Prompt", name: "prompt" },
     { placeholder: "Help?", name: "help" }
   ];
