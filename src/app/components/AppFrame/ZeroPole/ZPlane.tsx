@@ -34,7 +34,7 @@ export const ZPlane = ({ points, updatePoint, updateMagnitudeResponse, updatePha
    (2z^(-n) + 2z^(-n-1) + ...)/(1 + z^(-1))
  
  The following function does exactly that which multiplies the polynomials using the convolution operation.
- An idea to speed up this function: Use FFT to compute the convolution! 
+ An interesteing detail: We can also use FFT to compute the convolution! FFT speeds up convolution when performance is an issue. 
  */
     const calculateFilterCoefficients = (polynomials) => {
         let num = [];
