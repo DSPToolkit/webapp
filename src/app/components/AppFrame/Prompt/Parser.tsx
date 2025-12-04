@@ -14,7 +14,6 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
         filter: /^\s*filter\s*\((.*)\)\s*$/,
         windowing: /^^\s*windowing\s*\(\s*(lowpass|highpass|bandpass|bandstop)\s*,\s*(rectangular|hamming|han|bartlett)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)(?:\s*,\s*([0-9]*\.?[0-9]+))?\s*\)\s*$/,
         butterworth: /^^\s*butterworth\s*\(\s*(lowpass|highpass)\s*,\s*(\d+)\s*,\s*([0-9]*\.?[0-9]+)\)\s*$/
-
     }
 
     const patterns = [
