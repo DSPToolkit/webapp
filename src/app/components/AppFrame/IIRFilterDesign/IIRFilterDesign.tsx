@@ -3,20 +3,19 @@ import { Plot } from '../Common/Plot'
 import { Panel } from './Panel';
 import { FilterTest } from '../Common/FilterTest';
 import { IIREquation } from '../Common/IIREquation';
-import { bilinearTransform, getCausalButterworthPoles, getImpulseResponse, H_of_s, ZeroPad } from '../Common/Utils';
+import { bilinearTransform, getCausalButterworthPoles, getChebyshevIPoles, getImpulseResponse, H_of_s, ZeroPad } from '../Common/Utils';
 import FFT from 'fft.js';
 import { filterType, IIRfilterDesignMethod } from '../Common/enums';
 
 export const IIRFilterDesign = () => {
     const [trigger, setTrigger] = useState(false);
 
-    const [filterOrder, setFilterOrder] = useState(2);
+    const [filterOrder, setFilterOrder] = useState(4);
     const [filterCoefficients, setFilterCoefficients] = useState<{ num: any[]; den: any[] }>({ num: [1], den: [] });
     const [lowCutoff, setLowCutoff] = useState(0.4);
     const [highCutoff, setHighCutoff] = useState(0.9);
     const [chosenFilterType, setChosenFilterType] = useState(filterType.LOWPASS);
     const [chosenDesignMethodType, setChosenDesignMethodType] = useState(IIRfilterDesignMethod.BUTTERWORTH);
-
 
     const [magnitudeResponse, setMagnitudeResponse] = useState({
         xValues: Array.from({ length: 1024 }, (_, i) => i / 1024 * Math.PI),
@@ -60,22 +59,27 @@ export const IIRFilterDesign = () => {
         setPhaseResponse(() => outPlotPhase)
     }
 
-
     useEffect(() => {
         // Steps:
         // 1. Convert the discrete freq. to cont. freq. via the formula: Omega = 2*tan(w/2)
         // 2. Design an analog filter
         // 3. Convert the analog filter to digital filter (bilinear transform)
-
-        // 1:
         const Omega_c = 2 * Math.tan(lowCutoff / 2);
-        // 2: 
-        let poles = getCausalButterworthPoles(filterOrder, Omega_c);
+        var poles;
+        switch(chosenDesignMethodType) {
+            case IIRfilterDesignMethod.BUTTERWORTH:
+                poles = getCausalButterworthPoles(filterOrder, Omega_c);
+                break;
+            case IIRfilterDesignMethod.CHEBYCHEV:
+                poles = getChebyshevIPoles(filterOrder, 1, Omega_c);
+                break;
+
+        }
         const h_of_s = H_of_s(poles, Omega_c, chosenFilterType);
-        // 3. 
         const h_of_z = bilinearTransform(h_of_s);
         setFilterCoefficients(() => h_of_z);
-        computeMagnitudeAndFreqOfTheFrequencyResponse(h_of_z)
+        computeMagnitudeAndFreqOfTheFrequencyResponse(h_of_z)        
+
 
     }, [trigger]);
 

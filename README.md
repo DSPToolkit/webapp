@@ -3,13 +3,13 @@ A web app for designing and visualizing [digital filters](https://en.wikipedia.o
 In the current version, a filter can be designed via:
 - Visually placing poles and zeros on a Z-plane.
 - Windowing method.
-- Analog-to-digital transformation (IIR filter) using Butterworth method.
-- Using least squares to design a linear phase FIR filter.
+- Analog-to-digital transformation (IIR filter) using Butterworth and Chebyshev Type I.
+- Weighted least squares (linear phase FIR filter).
 
 After designing a fitler, the web app:
 - Computes the the magnitude and phase of the filter’s frequency response.
 - Generates the filter coefficients.
-- Visualizes the filter's output on a various input signals.
+- Visualizes the filter's output on different input signals.
 
 ## Getting Started
 To use the app, simply visit [dsptoolkit.github.io/filter-design/](https://dsptoolkit.github.io/filter-design/).

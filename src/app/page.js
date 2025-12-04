@@ -39,7 +39,7 @@ export default function Home() {
               DSPToolkit is an opensource web app for designing and visualizing digital filters.
             </p>
             <p>
-              Features include designing filters by placing <b>poles and zeroes on the Z-plane</b>, FIR filter design using windowing method, IIR design using Analog-to-digital transfomation, and lastly, applying least-squares solution.
+              Features include designing filters by placing poles and zeroes on the Z-plane, FIR filter design using windowing method, IIR filter design using analog-to-digital transfomation, and lastly, linear phase FIR design via weighted least-squares solution.
             </p>
             <p>
               For additional information visit:

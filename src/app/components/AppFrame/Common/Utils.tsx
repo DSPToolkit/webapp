@@ -158,19 +158,30 @@ export const transformAnalogLowpassToHighpass = (poles, Omega_c) => {
 
     let num = new Array(poles.length + 1).fill(0);
     num[0] = Math.pow(Omega_c, poles.length);
-    
+
     const gain = num[0] / den[0];
     num = num.map(c => c / gain);
-    return { num: num, den : den };
+    return { num: num, den: den };
 }
 
-export const getCausalButterworthPoles = (N, Omega_c) => { // N = Filter Order
+export const getCausalButterworthPoles = (N, omega_c) => { // N = Filter Order
     let s_k = [];
     for (let k = 0; k < 2 * N; k++) {
         let tmp = (Math.PI) / (2 * N) * (N + 2 * k - 1);
-        s_k.push(complex(Omega_c * Math.cos(tmp), Omega_c * Math.sin(tmp)));
+        s_k.push(complex(omega_c * Math.cos(tmp), omega_c * Math.sin(tmp)));
     }
     return s_k.filter(e => e.re < 0);
+}
+
+export const getChebyshevIPoles = (N, omega_c, rippleFactor = 0.5088471399) => {
+    const poles = [];
+    for (let i = 1; i <= N; i++) {
+        const theta = (Math.PI/2)*(2*i-1)/N;
+        const sigma = -omega_c * Math.sinh(Math.asinh(1 / rippleFactor) / N) * Math.sin(theta);
+        const omega =  omega_c * Math.cosh(Math.asinh(1 / rippleFactor) / N) * Math.cos(theta);
+        poles.push(complex(sigma, omega));
+    }
+    return poles;
 }
 
 export const H_of_s = (poles, Omega_c, type) => {
@@ -200,21 +211,21 @@ export const H_of_s = (poles, Omega_c, type) => {
 }
 
 export const countNumberOfOccurrences = (str, c) => {
-    return str.split(c).length-1;
+    return str.split(c).length - 1;
 }
 
 export const eulers_integration = () => {
-    return ;
+    return;
 }
 
 export const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
-        let array = new Array(N).fill(0);
-        for (let i = 0; i < N; i++) {
-            if (i == N / 2) array[i] = cutOffFreq / Math.PI;
-            else array[i] = 1 / (Math.PI * (i - (N / 2))) * Math.sin(cutOffFreq * (i - N / 2));
-        }
-        return array;
+    let array = new Array(N).fill(0);
+    for (let i = 0; i < N; i++) {
+        if (i == N / 2) array[i] = cutOffFreq / Math.PI;
+        else array[i] = 1 / (Math.PI * (i - (N / 2))) * Math.sin(cutOffFreq * (i - N / 2));
     }
+    return array;
+}
 
 export const bandpassImpulseResponse = (w1, w2, N = 1024) => {
     let array = new Array(N).fill(0);
@@ -270,7 +281,7 @@ export const Hamming = (M) => {
 export const Bartlett = (M) => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
-        array[i] = 1 - (2*Math.abs(i - (M-1)/2))/(M-1);
+        array[i] = 1 - (2 * Math.abs(i - (M - 1) / 2)) / (M - 1);
     }
     return array;
 
@@ -279,23 +290,23 @@ export const Bartlett = (M) => {
 export const Han = (M) => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
-        array[i] = 0.5 * (1 - Math.cos((2*Math.PI*i)/(M-1)));
+        array[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (M - 1)));
     }
     return array;
 }
 
-export const leastSquares_linearPhaseFIR = (F, A, N) => {
+export const leastSquares_linearPhaseFIR = (F, A, Weights, N) => {
     const L = 4098;
-    const M = (N-1)/2;
-    let normalizedFreqs = Array.from({length: L+1}, (_, i) => i / L);
+    const M = (N - 1) / 2;
+    let normalizedFreqs = Array.from({ length: L + 1 }, (_, i) => i / L);
     let w = multiplyArrayByAConstant(normalizedFreqs, Math.PI);
-    let D = Array(L+1).fill(0);
+    let D = Array(L + 1).fill(0);
 
-    for(let k = 0; k < F.length/2; k++) {
-        let f1 = F[k*2];
-        let f2 = F[k*2+1];
-        let A1 = A[k*2];
-        let A2 = A[k*2+1];
+    for (let k = 0; k < F.length / 2; k++) {
+        let f1 = F[k * 2];
+        let f2 = F[k * 2 + 1];
+        let A1 = A[k * 2];
+        let A2 = A[k * 2 + 1];
 
         for (let i = 0; i <= L; i++) {
             if (normalizedFreqs[i] >= f1 && normalizedFreqs[i] <= f2) {
@@ -313,8 +324,26 @@ export const leastSquares_linearPhaseFIR = (F, A, N) => {
         }
         C.push(row);
     }
+
+    // The equation to solve is:
+    // a = inv(C' W C) C' W D
+    // Here, W is a diagonal matrix of size (L+1) x (L+1), where each diagonal element assigns a weight to the corresponding normalized frequency point.
+    // For efficiency, you can omit creating the W and directly apply element-wise multiplication.
+    const WVec = [];
+    let weightsIdx = 0;
+    for (let i = 0; i <= L; i++) {
+        const f = normalizedFreqs[i];
+        while (weightsIdx < Weights.length - 1 && f > F[2 * weightsIdx + 1]) {
+            weightsIdx++;
+        }
+
+        WVec.push(Weights[weightsIdx]);
+    }
+    const WC = C.map((row, i) => row.map(x => x * WVec[i]));
+    const WD = D.map((d, i) => d * WVec[i]);
     
-    const a = multiply(pinv(multiply(transpose(C), C)), multiply(transpose(C), D));
+    // Solve
+    const a = multiply(pinv(multiply(transpose(C), WC)), multiply(transpose(C), WD));
 
     const h = new Array(N).fill(0);
     h[M] = a[0];
