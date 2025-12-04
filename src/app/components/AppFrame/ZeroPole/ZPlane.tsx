@@ -282,7 +282,7 @@ export const ZPlane = ({ points, updatePoint, updateMagnitudeResponse, updatePha
                         ?
                     </button>
                     <div className="pointer-events-none z-50 absolute right-0 top-10 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                        The figure shows the Z-plane. Choose your desired locations of poles and zeros, and then click on "Design Filter"
+                        The figure shows the Z-plane. Choose your desired locations of poles and zeros, and then click on "Design Filter".
                     </div>
                 </div>
             </div>
