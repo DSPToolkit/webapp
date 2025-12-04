@@ -12,6 +12,7 @@ export const LeastSqaureLinearPhaseFIRDesign = () => {
     const [filterSize, setFilterSize] = useState(11);
     const [frequencies, setFrequencies] = useState([0, 0.15, 0.85, 1]);
     const [amplitudes, setAmplitudes] = useState([1, 1, 0, 0]);
+    const [weights, setWeights] = useState([1, 100]);
 
     const [filterCoefficients, setFilterCoefficients] = useState<{ num: any[]; den: any[] }>({ num: [1], den: [] });
 
@@ -21,8 +22,8 @@ export const LeastSqaureLinearPhaseFIRDesign = () => {
     });
 
     const run = () => {
-        let h = leastSquares_linearPhaseFIR(frequencies, amplitudes, filterSize);
-
+        let h = leastSquares_linearPhaseFIR(frequencies, amplitudes, weights, filterSize);
+        console.log(weights)
         setFilterCoefficients({ num: h, den: [1] });
         const fftN = 1024;
         let out = {
@@ -53,6 +54,7 @@ export const LeastSqaureLinearPhaseFIRDesign = () => {
                     filterSize={filterSize} updateFilterSize={(e) => setFilterSize(e)}
                     frequencies={frequencies} updateFrequencies={(e) => setFrequencies(e)}
                     amplitudes={amplitudes} updateAmplitudes={(e) => setAmplitudes(e)}
+                    weights={weights} updateWeights={(e) => setWeights(e)}
                     trigger={trigger} updateTrigger={(e) => setTrigger(e)}
                 />
                 <FilterTest filterCoefficients={filterCoefficients} />

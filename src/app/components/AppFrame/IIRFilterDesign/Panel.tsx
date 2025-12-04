@@ -48,6 +48,7 @@ export const Panel = ({ trigger, updateTrigger,
                         {windowTypeDropdownIsOpen && (
                             <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg">
                                 <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => updateChosenMethod(IIRfilterDesignMethod.BUTTERWORTH)}>Butterworth</a>
+                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => updateChosenMethod(IIRfilterDesignMethod.CHEBYCHEV)}>Chebychev</a>
                                 {/* <a id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.BARTLETT)} className="my-0.5 w-24 cursor-pointer">Bartlett</a> */}
                             </div>
                         )}

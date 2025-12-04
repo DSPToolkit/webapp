@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 export const LS_LPFIRPanel = ({ trigger, updateTrigger,
     filterSize, updateFilterSize,
     frequencies, updateFrequencies,
-    amplitudes, updateAmplitudes
+    amplitudes, updateAmplitudes,
+    weights, updateWeights
 }) => {
     const [freqText, setFreqText] = useState('0 0.15 0.85 1');
     const [amplitudesText, setAmplitudesText] = useState('1 1 0 0');
+    const [weightText, setWeightText] = useState('1 100');
 
     const validateFreq = (freqArray) => {
         if (freqArray.length == 0) return false;
@@ -27,13 +29,15 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
 
         return true;
     }
+
     return (
         <div className="bg-gray-50 p-4 my-5 mx-2 rounded-2xl shadow-md">
-            <div className="flex justify-between">
-                <div className="flex flex-col my-2 mx-3">
-                    <label className="my-6 mb-2">Amplitudes:</label>
-                    <label className="my-6 mb-2">Frequencies:</label>
-                    <label className="my-6 mb-2">Filter Size:</label>
+            <div className="flex p-2 justify-between">
+                <div className="flex flex-col my-4 mx-3">
+                    <label className="my-2 mb-2">Amplitudes:</label>
+                    <label className="my-2 mb-2">Frequencies:</label>
+                    <label className="my-2 mb-2">Weights:</label>
+                    <label className="my-2 mb-2">Filter Size:</label>
 
                 </div>
                 
@@ -42,7 +46,7 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
 
                         <input
                             type="text"
-                            className="rounded-lg shadow p-2 m-2 w-64"
+                            className="rounded-lg shadow m-1 p-1 w-64"
                             value={amplitudesText}
                             onChange={(e) => setAmplitudesText(e.target.value)}
                             placeholder="Amplitudes (space separated)"
@@ -53,20 +57,28 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
 
                         <input
                             type="text"
-                            className="rounded-lg shadow p-2 m-2 w-64"
+                            className="rounded-lg shadow m-1 p-1 w-64"
                             value={freqText}
                             onChange={(e) => setFreqText(e.target.value)}
                             placeholder="Frequencies (space separated)"
                         />
                     </div>
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            className="rounded-lg shadow m-1 p-1 w-64"
+                            value={weightText}
+                            onChange={(e) => setWeightText(e.target.value)}
+                            placeholder="Frequencies (space separated)"
+                        />
+                    </div>                    
                     <div>
                         <div className="flex items-center ">
-
                             <input
                                 type="number"
                                 min="0" max="1000"
                                 step="2"
-                                className="rounded-lg shadow p-1 my-4 w-32 mx-1"
+                                className="rounded-lg shadow p-1 my-1 w-32 mx-1"
                                 value={filterSize}
                                 onChange={(e) =>
                                 Number(e.target.value) % 2 === 0
@@ -78,13 +90,14 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
                     </div>
                 </div>
 
-                <div className="relative my-5 mx-2 group ml-2">
+                <div className="relative my-4 mx-2 group ml-2">
                     <button className="w-11 h-11 bg-gray-200 text-black text-lg rounded-full hover:bg-gray-300">
                         ?
                     </button>
                     <div className="pointer-events-none z-50 absolute right-0 top-12 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                        Enter normalized frequency ranges and their corresponding amplitudes as pairs.
-                        <br></br>Ex: Freq = [0 0.2 0.8 1], Amp = [1 1 0 0] defines a lowpass filter with unity gain from 0-0.2 and zero elsewhere.
+                        Enter normalized frequency ranges and their corresponding amplitudes as pairs, along with their weights.
+                        <br></br>
+                        Ex: Freq = [0 0.2 0.8 1], Amp = [1 1 0 0], and Weight = [10 1] defines a lowpass filter with unity gain from 0-0.2 and zero elsewhere, with more weight given to the passband.
                     </div>
                 </div>
 
@@ -102,10 +115,19 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
                             .map(x => parseFloat(x.trim()))
                             .filter(x => !isNaN(x));
 
-                        if ((validateFreq(freqArray) && validateAmplitudes(amplitudesArray)) && freqArray.length == amplitudesArray.length) {
+                        const weightsArray = weightText
+                            .split(' ')
+                            .map(x => parseFloat(x.trim()))
+                            .filter(x => !isNaN(x));
+
+                        if (
+                            (validateFreq(freqArray) && validateAmplitudes(amplitudesArray)) && 
+                            (freqArray.length == amplitudesArray.length) &&
+                            (weightsArray.length == freqArray.length / 2)) {
                             updateTrigger(!trigger);
                             updateFrequencies(freqArray);
                             updateAmplitudes(amplitudesArray);
+                            updateWeights(weightsArray);
                         }
                     }}
                     className="h-10 my-3 text-sm mx-2 px-6 bg-indigo-600 rounded-lg text-white p-2 hover:bg-blue-800"
