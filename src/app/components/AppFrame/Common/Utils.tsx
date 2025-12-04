@@ -1,5 +1,6 @@
-import { add, complex, multiply } from 'mathjs';
+import { add, complex, multiply, transpose, pinv } from 'mathjs';
 import { filterType } from './enums';
+const math = require('mathjs');
 
 export const convolve = (a, b) => {
     let m = a.length + b.length - 1;
@@ -250,6 +251,14 @@ export const elementWiseMultiply = (arr1, arr2) => {
     return res;
 }
 
+export const multiplyArrayByAConstant = (arr, constant) => {
+    let res = new Array(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+        res[i] = constant * arr[i];
+    }
+    return res;
+}
+
 export const Hamming = (M) => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
@@ -274,10 +283,45 @@ export const Han = (M) => {
     }
     return array;
 }
-// TODO
-// export const Kaiser = (M, a) => {
-//     let array = new Array(M);
-//     for (let i = 0; i < M; i++) {
-//     }
-//     return array;
-// }
+
+export const leastSquares_linearPhaseFIR = (F, A, N) => {
+    const L = 4098;
+    const M = (N-1)/2;
+    let normalizedFreqs = Array.from({length: L+1}, (_, i) => i / L);
+    let w = multiplyArrayByAConstant(normalizedFreqs, Math.PI);
+    let D = Array(L+1).fill(0);
+
+    for(let k = 0; k < F.length/2; k++) {
+        let f1 = F[k*2];
+        let f2 = F[k*2+1];
+        let A1 = A[k*2];
+        let A2 = A[k*2+1];
+
+        for (let i = 0; i <= L; i++) {
+            if (normalizedFreqs[i] >= f1 && normalizedFreqs[i] <= f2) {
+                D[i] = A1 + (A2 - A1) * (normalizedFreqs[i] - f1) / (f2 - f1);
+            }
+        }
+    }
+
+    // Build cosine matrix
+    const C = [];
+    for (let i = 0; i <= L; i++) {
+        const row = [];
+        for (let k = 0; k <= M; k++) {
+            row.push(Math.cos(w[i] * k));
+        }
+        C.push(row);
+    }
+    
+    const a = multiply(pinv(multiply(transpose(C), C)), multiply(transpose(C), D));
+
+    const h = new Array(N).fill(0);
+    h[M] = a[0];
+    for (let k = 1; k <= M; k++) {
+        h[M - k] = a[k] / 2;
+        h[M + k] = a[k] / 2;
+    }
+
+    return h;
+};

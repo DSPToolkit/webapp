@@ -4,6 +4,7 @@ import { Sidebar } from "./components/Sidebar/Sidebar";
 import { ZeroPole } from './components/AppFrame/ZeroPole/ZeroPole';
 import { FIRFilterDesign } from './components/AppFrame/FIRFilterDesign/FIRFilterDesign';
 import { IIRFilterDesign } from './components/AppFrame/IIRFilterDesign/IIRFilterDesign';
+import { LeastSqaureLinearPhaseFIRDesign } from './components/AppFrame/LeastSquareLinearPhaseFIRDesign/LeastSqaureLinearPhaseFIRDesign';
 import { Prompt } from './components/AppFrame/Prompt/Prompt';
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
     { placeholder: "Zero-pole placement", name: "zero_pole" },
     { placeholder: "Windowing method", name: "fir_filter_design" },
     { placeholder: "Analog-to-digital transform", name: "iir_filter_design" },
+    { placeholder: "Linear phase FIR-LS", name: "least_square_linear_phase_FIR" },
     { placeholder: "> Interactive Prompt", name: "prompt" },
     { placeholder: "Help?", name: "help" }
   ];
@@ -25,6 +27,8 @@ export default function Home() {
         return <FIRFilterDesign />;
       case "iir_filter_design":
         return <IIRFilterDesign />;
+        case "least_square_linear_phase_FIR":
+        return <LeastSqaureLinearPhaseFIRDesign />;
       case "prompt":
         return <Prompt />;
       case "help":
@@ -35,7 +39,7 @@ export default function Home() {
               DSPToolkit is an opensource web app for designing and visualizing digital filters.
             </p>
             <p>
-              Features include designing filters by placing <b>poles and zeroes on the Z-plane</b>, FIR filter design using <b>windowing method</b> and IIR design using <b>Butterworth</b> method.
+              Features include designing filters by placing <b>poles and zeroes on the Z-plane</b>, FIR filter design using windowing method, IIR design using Analog-to-digital transfomation, and lastly, applying least-squares solution.
             </p>
             <p>
               For additional information visit:
