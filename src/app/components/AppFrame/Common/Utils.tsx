@@ -1,12 +1,12 @@
+// TODO: This file has become more than a collection of 'utility' functions. It should be broken down to multiple files. 
+
 import { add, complex, multiply, transpose, pinv } from 'mathjs';
 import { filterType } from './enums';
-const math = require('mathjs');
 
 export const convolve = (a, b) => {
     let m = a.length + b.length - 1;
     let result = new Array(m).fill(0);
     for (let i = 0; i < a.length; i++) {
-        let sum = 0;
         for (let j = 0; j < b.length; j++) {
             result[i + j] = add(result[i + j], multiply(a[i], b[j]));
         }
@@ -93,7 +93,6 @@ export const addArraysFromRight = (arr1, arr2) => {
 
     return res;
 };
-
 
 export const bilinearTransform = (coeff: { num: any[]; den: any[] }) => { // Receives transfer function coefficients as an array
     // Necessary to reverse them to make it suitable to apply the next procedures
@@ -328,7 +327,7 @@ export const leastSquares_linearPhaseFIR = (F, A, Weights, N) => {
     // The equation to solve is:
     // a = inv(C' W C) C' W D
     // Here, W is a diagonal matrix of size (L+1) x (L+1), where each diagonal element assigns a weight to the corresponding normalized frequency point.
-    // For efficiency, you can omit creating the W and directly apply element-wise multiplication.
+    // For efficiency, omit creating the W and directly apply element-wise multiplication.
     const WVec = [];
     let weightsIdx = 0;
     for (let i = 0; i <= L; i++) {
