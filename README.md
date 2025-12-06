@@ -3,7 +3,7 @@ A web app for designing and visualizing [digital filters](https://en.wikipedia.o
 In the current version, a filter can be designed via:
 - Visually placing poles and zeros on a Z-plane.
 - Windowing method.
-- Analog-to-digital transformation (IIR filter) using Butterworth and Chebyshev Type I.
+- Analog-to-digital transformation (IIR filter) using Butterworth and Chebyshev.
 - Weighted least squares (linear phase FIR filter).
 
 After designing a fitler, the web app:
