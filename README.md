@@ -1,4 +1,4 @@
-# DSPToolkit filter designer web app
+# ForgeDSP filter designer web app
 A web app for designing and visualizing [digital filters](https://en.wikipedia.org/wiki/Digital_filter).
 In the current version, a filter can be designed via:
 - Visually placing poles and zeros on a Z-plane.
@@ -12,13 +12,13 @@ After designing a fitler, the web app:
 - Visualizes the filter's output on different input signals.
 
 ## Getting Started
-To use the app, simply visit [dsptoolkit.github.io/filter-designer](https://dsptoolkit.github.io/filter-designer).
+To use the app, simply visit [forgedsp.github.io/filter-designer](https://forgedsp.github.io/filter-designer).
 Alternatively, to install and run the app locally, make sure you have a recent version of [Node](https://nodejs.org/en) installed.
 Afterwards:
 
 - Clone the repository:
 ```shell
-git clone git@github.com:DSPToolkit/filter-designer.git
+git clone git@github.com:ForgeDSP/filter-designer.git
 cd filter-designer
 ```
 - Install the dependencies:
@@ -33,7 +33,7 @@ npm run dev
 
 Screenshot:
 
-![](https://raw.githubusercontent.com/DSPToolkit/DSPToolkit.github.io/refs/heads/main/screenshot.png)
+![](https://raw.githubusercontent.com/ForgeDSP/ForgeDSP.github.io/refs/heads/main/screenshot.png)
 <!-- ## Demo
 The following video shows the design of a low-pass filter:
 ![](https://raw.githubusercontent.com/alavifazel/demo/refs/heads/main/animation-smaller.gif) -->
