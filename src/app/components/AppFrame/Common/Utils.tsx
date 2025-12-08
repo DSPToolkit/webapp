@@ -3,7 +3,7 @@
 import { add, complex, multiply, transpose, pinv } from 'mathjs';
 import { filterType } from './enums';
 
-export const convolve = (a, b) => {
+export const convolve = (a: number[], b: number[]) => {
     let m = a.length + b.length - 1;
     let result = new Array(m).fill(0);
     for (let i = 0; i < a.length; i++) {
@@ -48,7 +48,7 @@ export const ZeroPad = (array, sizeOfTheZeroPaddedArray) => {
     return array.concat(theRestOfTheZeroPaddedArray);
 }
 
-export const getImpulseResponse = (filterCoefficients, size = 1000) => {
+export const getImpulseResponse = (filterCoefficients: number, size = 1000) => {
     let impulseSignal = [];
     impulseSignal.push(1);
     for (let i = 0; i < size; i++) {
@@ -94,7 +94,7 @@ export const addArraysFromRight = (arr1, arr2) => {
     return res;
 };
 
-export const bilinearTransform = (coeff: { num: any[]; den: any[] }) => { // Receives transfer function coefficients as an array
+export const bilinearTransform = (coeff: { num: number[]; den: number[] }) => { // Receives transfer function coefficients as an array
     // Necessary to reverse them to make it suitable to apply the next procedures
     coeff.num = coeff.num.reverse();
     coeff.den = coeff.den.reverse();
@@ -172,13 +172,16 @@ export const getCausalButterworthPoles = (N, omega_c) => { // N = Filter Order
     return s_k.filter(e => e.re < 0);
 }
 
-export const getChebyshevIPoles = (N, omega_c, rippleFactor = 0.5088471399) => {
+export const getChebyshevIPoles = (N, omega_c, epsilon = 0.5088471399) => {
     const poles = [];
+    const beta = (1/N) * Math.asinh( 1 / epsilon);
+    const sigma = Math.sinh(beta);
+    const omega = Math.cosh(beta);
     for (let i = 1; i <= N; i++) {
         const theta = (Math.PI/2)*(2*i-1)/N;
-        const sigma = -omega_c * Math.sinh(Math.asinh(1 / rippleFactor) / N) * Math.sin(theta);
-        const omega =  omega_c * Math.cosh(Math.asinh(1 / rippleFactor) / N) * Math.cos(theta);
-        poles.push(complex(sigma, omega));
+        const x = -omega_c * sigma * Math.sin(theta);
+        const y =  omega_c * omega  * Math.cos(theta);
+        poles.push(complex(x, y));
     }
     return poles;
 }
@@ -217,7 +220,7 @@ export const eulers_integration = () => {
     return;
 }
 
-export const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
+export const lowPassImpulseResponse = (cutOffFreq: number, N: number = 1024) => {
     let array = new Array(N).fill(0);
     for (let i = 0; i < N; i++) {
         if (i == N / 2) array[i] = cutOffFreq / Math.PI;
@@ -226,7 +229,7 @@ export const lowPassImpulseResponse = (cutOffFreq, N = 1024) => {
     return array;
 }
 
-export const bandpassImpulseResponse = (w1, w2, N = 1024) => {
+export const bandpassImpulseResponse = (w1: number, w2: number, N: number = 1024) => {
     let array = new Array(N).fill(0);
     const mid = Math.floor(N / 2); // Math.floor() is necessary to make it work for both odd and even Ns
 
@@ -242,8 +245,7 @@ export const bandpassImpulseResponse = (w1, w2, N = 1024) => {
     return array;
 };
 
-
-export const elementWiseAdd = (arr1, arr2) => {
+export const elementWiseAdd = (arr1: number[], arr2: number[]) => {
     console.assert(arr1.length == arr2.length);
     let res = new Array(arr1.length);
     for (let i = 0; i < arr1.length; i++) {
@@ -252,7 +254,7 @@ export const elementWiseAdd = (arr1, arr2) => {
     return res;
 }
 
-export const elementWiseMultiply = (arr1, arr2) => {
+export const elementWiseMultiply = (arr1: number[], arr2: number[]) => {
     console.assert(arr1.length == arr2.length);
     let res = new Array(arr1.length);
     for (let i = 0; i < arr1.length; i++) {
@@ -269,7 +271,7 @@ export const multiplyArrayByAConstant = (arr, constant) => {
     return res;
 }
 
-export const Hamming = (M) => {
+export const Hamming = (M: number): number[] => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
         array[i] = 0.54 - 0.46 * Math.cos((2 * Math.PI * i) / (M - 1))
@@ -277,7 +279,7 @@ export const Hamming = (M) => {
     return array;
 }
 
-export const Bartlett = (M) => {
+export const Bartlett = (M: number): number[] => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
         array[i] = 1 - (2 * Math.abs(i - (M - 1) / 2)) / (M - 1);
@@ -286,7 +288,7 @@ export const Bartlett = (M) => {
 
 }
 
-export const Han = (M) => {
+export const Han = (M: number): number[] => {
     let array = new Array(M);
     for (let i = 0; i < M; i++) {
         array[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (M - 1)));

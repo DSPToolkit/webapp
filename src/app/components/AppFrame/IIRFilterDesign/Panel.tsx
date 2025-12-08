@@ -10,10 +10,10 @@ export const Panel = ({ trigger, updateTrigger,
 }) => {
 
     const [fitlerTypeDropdownIsOpen, setFitlerTypeDropdownIsOpen] = useState(false);
-    const [windowTypeDropdownIsOpen, setWindowTypeDropdownIsOpen] = useState(false);
+    const [methodDropdownIsOpen, setMethodDropdownIsOpen] = useState(false);
 
     const toggleFilterTypeDropdown = () => setFitlerTypeDropdownIsOpen(!fitlerTypeDropdownIsOpen);
-    const toggleWindowTypeDropdown = () => setWindowTypeDropdownIsOpen(!windowTypeDropdownIsOpen);
+    const toggleMethodDropdown = () => setMethodDropdownIsOpen(!methodDropdownIsOpen);
 
     return (
         <div className="flex flex-col justify-between h-screen h-48 bg-gray-50 p-2 my-5 mx-2 rounded-2xl shadow-md" style={{ height: '322px', width: '515px' }}>
@@ -29,10 +29,8 @@ export const Panel = ({ trigger, updateTrigger,
 
                             {fitlerTypeDropdownIsOpen && (
                                 <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg z-10">
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.LOWPASS)} className="my-0.5 w-24 cursor-pointer">Low-pass</a>
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.HIGHPASS)} className="my-0.5 w-24 cursor-pointer">High-pass</a>
-                                    {/* <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.HIGHPASS)} className="my-0.5 w-24 cursor-pointer">High-pass</a>
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.BANDPASS)} className="my-0.5 w-24 cursor-pointer">Band-pass</a> */}
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.LOWPASS); toggleFilterTypeDropdown(); } } className="my-0.5 w-24 cursor-pointer">Low-pass</a>
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.HIGHPASS); toggleFilterTypeDropdown(); } } className="my-0.5 w-24 cursor-pointer">High-pass</a>
                                 </div>
                             )}
                         </div>
@@ -42,14 +40,13 @@ export const Panel = ({ trigger, updateTrigger,
                 <div className="flex items-center mt-5">
                     <label>Design Method: </label>
                     <div className="relative mx-2">
-                        <button onClick={toggleWindowTypeDropdown} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700 w-32">
+                        <button onClick={toggleMethodDropdown} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700 w-32">
                             {chosenMethod}
                         </button>
-                        {windowTypeDropdownIsOpen && (
+                        {methodDropdownIsOpen && (
                             <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg">
-                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => updateChosenMethod(IIRfilterDesignMethod.BUTTERWORTH)}>Butterworth</a>
-                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => updateChosenMethod(IIRfilterDesignMethod.CHEBYCHEV)}>Chebychev</a>
-                                {/* <a id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.BARTLETT)} className="my-0.5 w-24 cursor-pointer">Bartlett</a> */}
+                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => { updateChosenMethod(IIRfilterDesignMethod.BUTTERWORTH); toggleMethodDropdown(); } }>Butterworth</a>
+                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => { updateChosenMethod(IIRfilterDesignMethod.CHEBYCHEV); toggleMethodDropdown(); } }>Chebychev</a>
                             </div>
                         )}
                     </div>

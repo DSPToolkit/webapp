@@ -1,0 +1,83 @@
+"use client"; // This is a client component 👈🏽
+import React from 'react';
+import { ZeroPole } from './components/AppFrame/ZeroPole/ZeroPole';
+import { FIRFilterDesign } from './components/AppFrame/FIRFilterDesign/FIRFilterDesign';
+import { IIRFilterDesign } from './components/AppFrame/IIRFilterDesign/IIRFilterDesign';
+import { LeastSqaureLinearPhaseFIRDesign } from './components/AppFrame/LeastSquareLinearPhaseFIRDesign/LeastSqaureLinearPhaseFIRDesign';
+import { Prompt } from './components/AppFrame/Prompt/Prompt';
+
+export default function Home() {
+  const items = [
+    { placeholder: "Zero-pole placement", name: "zero_pole" },
+    { placeholder: "Windowing method", name: "fir_filter_design" },
+    { placeholder: "Analog-to-digital transform", name: "iir_filter_design" },
+    { placeholder: "Linear phase FIR-LS", name: "least_square_linear_phase_FIR" },
+    { placeholder: "> Interactive Prompt", name: "prompt" },
+    { placeholder: "Help?", name: "help" }
+  ];
+
+  const [selectedItem, setSelectedItem] = React.useState(items[0]);
+
+  const addComponent = () => {
+    switch (selectedItem.name) {
+      case "zero_pole":
+        return <ZeroPole />;
+      case "fir_filter_design":
+        return <FIRFilterDesign />;
+      case "iir_filter_design":
+        return <IIRFilterDesign />;
+        case "least_square_linear_phase_FIR":
+        return <LeastSqaureLinearPhaseFIRDesign />;
+      case "prompt":
+        return <Prompt />;
+      case "help":
+        return (
+          <div className="bg-white rounded-lg shadow w-full p-5">
+            <br></br>
+            <p>
+              ForgeDSP is an opensource web app for designing and visualizing digital filters.
+              Features include designing filters by placing poles and zeroes on the Z-plane, FIR filter design using windowing method, IIR filter design using analog-to-digital transfomation, and lastly, linear phase FIR design via weighted least-squares solution.
+            </p>
+            <p>
+              For additional information visit: <a className="text-blue-600" href="https://github.com/ForgeDSP">https://github.com/forgedsp</a></p>
+            <br></br>
+            <p>Version: 0.2</p>
+          </div >
+        )
+    }
+  }
+
+  return (
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <aside className="flex flex-col px-5 py-4 border-r border-slate-200">
+        {items.map((item, index) => (
+          item.name === "prompt" ? (
+            <div className="mt-auto" key={`prompt-${item.name}-${index}`}>
+              <button
+                className={`flex mt-auto h-10 p-2 text-sm rounded w-48 
+                  ${selectedItem.name === item.name ? "bg-white hover:bg-gray-50 shadow" : ""}`}
+                onClick={() => setSelectedItem(item)}
+              >
+                <p className="font-bold">{item.placeholder}</p>
+              </button>
+            </div>
+          ) : (
+            <button
+              key={`item-${item.name}-${index}`}
+              className={`flex h-10 p-2 text-sm rounded
+                ${selectedItem.name === item.name ? "bg-white hover:bg-gray-50 shadow" : ""}`}
+              onClick={() => setSelectedItem(item)}
+            >
+              <p>{item.placeholder}</p>
+            </button>
+          )
+        ))}
+      </aside>
+      {/* Main app */}
+      <main>
+        {addComponent()}
+      </main>
+  </div>
+  )
+}

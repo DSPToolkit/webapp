@@ -17,7 +17,6 @@ export const Panel = ({ trigger, updateTrigger,
 
     return (
         <div className="flex flex-col justify-between h-screen h-48 bg-gray-50 p-2 my-5 mx-2 rounded-2xl shadow-md" style={{ height: '322px', width: '515px' }}>
-
             <div className="m-4">
                 <div id="content">
                     <div className="flex items-center">
@@ -29,10 +28,10 @@ export const Panel = ({ trigger, updateTrigger,
 
                             {fitlerTypeDropdownIsOpen && (
                                 <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg z-10">
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.LOWPASS)} className="my-0.5 w-24 cursor-pointer">Low-pass</a>
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.HIGHPASS)} className="my-0.5 w-24 cursor-pointer">High-pass</a>
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.BANDPASS)} className="my-0.5 w-24 cursor-pointer">Band-pass</a>
-                                    <a id="chooseFilterType" onClick={() => updateChoosenFilterType(filterType.BANDSTOP)} className="my-0.5 w-24 cursor-pointer">Band-stop</a>
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.LOWPASS); toggleFilterTypeDropdown(); } } className="my-0.5 w-24 cursor-pointer">Low-pass</a>
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.HIGHPASS); toggleFilterTypeDropdown(); } } className="my-0.5 w-24 cursor-pointer">High-pass</a>
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.BANDPASS); toggleFilterTypeDropdown(); } } className="my-0.5 w-24 cursor-pointer">Band-pass</a>
+                                    <a id="chooseFilterType" onClick={() => { updateChoosenFilterType(filterType.BANDSTOP); toggleFilterTypeDropdown() } } className="my-0.5 w-24 cursor-pointer">Band-stop</a>
                                 </div>
                             )}
                         </div>
@@ -81,10 +80,10 @@ export const Panel = ({ trigger, updateTrigger,
                         </button>
                         {windowTypeDropdownIsOpen && (
                             <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg">
-                                <a className="z-0 my-0.5 w-24 cursor-pointer" id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.RECTANGULAR)}>Rectangular</a>
-                                <a id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.HAMMING)} className="my-0.5 w-24 cursor-pointer">Hamming</a>
-                                <a id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.HAN)} className="my-0.5 w-24 cursor-pointer">Han</a>
-                                <a id="chooseFilterType" onClick={() => updateChosenWindowType(windowType.BARTLETT)} className="my-0.5 w-24 cursor-pointer">Bartlett</a>
+                                <a className="z-0 my-0.5 w-24 cursor-pointer" id="chooseFilterType" onClick={() => {updateChosenWindowType(windowType.RECTANGULAR); toggleWindowTypeDropdown() }}>Rectangular</a>
+                                <a id="chooseFilterType" onClick={() => {updateChosenWindowType(windowType.HAMMING); toggleWindowTypeDropdown()} } className="my-0.5 w-24 cursor-pointer">Hamming</a>
+                                <a id="chooseFilterType" onClick={() => {updateChosenWindowType(windowType.HAN); toggleWindowTypeDropdown()} } className="my-0.5 w-24 cursor-pointer">Han</a>
+                                <a id="chooseFilterType" onClick={() => {updateChosenWindowType(windowType.BARTLETT); toggleWindowTypeDropdown()} } className="my-0.5 w-24 cursor-pointer">Bartlett</a>
                             </div>
                         )}
                     </div>

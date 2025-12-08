@@ -13,7 +13,7 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "DSPToolkit: Digital filter design web app",
+  title: "ForgeDSP: Digital filter design web app",
   description: "A web app to design digital filters",
 };
 
