@@ -4,6 +4,7 @@ import { ZeroPole } from './components/AppFrame/ZeroPole/ZeroPole';
 import { FIRFilterDesign } from './components/AppFrame/FIRFilterDesign/FIRFilterDesign';
 import { IIRFilterDesign } from './components/AppFrame/IIRFilterDesign/IIRFilterDesign';
 import { LeastSqaureLinearPhaseFIRDesign } from './components/AppFrame/LeastSquareLinearPhaseFIRDesign/LeastSqaureLinearPhaseFIRDesign';
+import { Periodogram } from './components/AppFrame/Periodogram/Periodogram';
 import { Prompt } from './components/AppFrame/Prompt/Prompt';
 
 export default function Home() {
@@ -12,6 +13,8 @@ export default function Home() {
     { placeholder: "Windowing method", name: "fir_filter_design" },
     { placeholder: "Analog-to-digital transform", name: "iir_filter_design" },
     { placeholder: "Linear phase FIR-LS", name: "least_square_linear_phase_FIR" },
+    { placeholder: "separator", name: "seperator" },
+    { placeholder: "Periodogram", name: "periodogram" },
     { placeholder: "> Interactive Prompt", name: "prompt" },
     { placeholder: "Help?", name: "help" }
   ];
@@ -28,6 +31,8 @@ export default function Home() {
         return <IIRFilterDesign />;
         case "least_square_linear_phase_FIR":
         return <LeastSqaureLinearPhaseFIRDesign />;
+      case "periodogram":
+        return <Periodogram />
       case "prompt":
         return <Prompt />;
       case "help":
@@ -51,8 +56,9 @@ export default function Home() {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside className="flex flex-col px-5 py-4 border-r border-slate-200">
-        {items.map((item, index) => (
-          item.name === "prompt" ? (
+        {items.map((item, index) => {
+        if (item.name === "prompt") {
+          return (
             <div className="mt-auto" key={`prompt-${item.name}-${index}`}>
               <button
                 className={`flex mt-auto h-10 p-2 text-sm rounded w-48 
@@ -62,7 +68,13 @@ export default function Home() {
                 <p className="font-bold">{item.placeholder}</p>
               </button>
             </div>
-          ) : (
+          );
+        }  else if (item.name === "seperator") {
+          return (
+            <div className="h-px bg-gray-300 my-1 px-2"  key="seperator"></div>
+          );
+        } else {
+          return (
             <button
               key={`item-${item.name}-${index}`}
               className={`flex h-10 p-2 text-sm rounded
@@ -71,8 +83,10 @@ export default function Home() {
             >
               <p>{item.placeholder}</p>
             </button>
-          )
-        ))}
+          );
+        }
+      })}
+
       </aside>
       {/* Main app */}
       <main>
