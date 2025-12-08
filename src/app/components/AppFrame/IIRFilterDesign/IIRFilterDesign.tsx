@@ -16,6 +16,7 @@ export const IIRFilterDesign = () => {
     const [highCutoff, setHighCutoff] = useState(0.9);
     const [chosenFilterType, setChosenFilterType] = useState(filterType.LOWPASS);
     const [chosenDesignMethodType, setChosenDesignMethodType] = useState(IIRfilterDesignMethod.BUTTERWORTH);
+    const [chebyshevEpsilonFactor, setChebyshevEpsilonFactor] = useState(0.5);
 
     const [magnitudeResponse, setMagnitudeResponse] = useState({
         xValues: Array.from({ length: 1024 }, (_, i) => i / 1024 * Math.PI),
@@ -70,16 +71,15 @@ export const IIRFilterDesign = () => {
             case IIRfilterDesignMethod.BUTTERWORTH:
                 poles = getCausalButterworthPoles(filterOrder, Omega_c);
                 break;
-            case IIRfilterDesignMethod.CHEBYCHEV:
-                poles = getChebyshevIPoles(filterOrder, 1, Omega_c);
+            case IIRfilterDesignMethod.CHEBYSHEV:
+                poles = getChebyshevIPoles(filterOrder, Omega_c, chebyshevEpsilonFactor);
                 break;
-
         }
+
         const h_of_s = H_of_s(poles, Omega_c, chosenFilterType);
         const h_of_z = bilinearTransform(h_of_s);
-        setFilterCoefficients(() => h_of_z);
-        computeMagnitudeAndFreqOfTheFrequencyResponse(h_of_z)        
-
+        setFilterCoefficients(() => h_of_z );
+        computeMagnitudeAndFreqOfTheFrequencyResponse(h_of_z);
 
     }, [trigger]);
 
@@ -92,6 +92,7 @@ export const IIRFilterDesign = () => {
                     chosenMethod={chosenDesignMethodType} updateChosenMethod={(e) => setChosenDesignMethodType(e)}
                     filterOrder={filterOrder} updateFilterOrder={(e) => setFilterOrder(e)}
                     lowCutoff={lowCutoff} updateLowCutoff={(e) => setLowCutoff(e)}
+                    chebyshevEpsilonFactor={chebyshevEpsilonFactor} updateChebyshevEpsilonFactor={(e) => setChebyshevEpsilonFactor(e)}
                     highCutoff={highCutoff} updateHighCutoff={(e) => setHighCutoff(e)}
                 />
                 <FilterTest filterCoefficients={filterCoefficients} />

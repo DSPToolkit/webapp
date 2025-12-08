@@ -172,19 +172,26 @@ export const getCausalButterworthPoles = (N, omega_c) => { // N = Filter Order
     return s_k.filter(e => e.re < 0);
 }
 
-export const getChebyshevIPoles = (N, omega_c, epsilon = 0.5088471399) => {
+export const getChebyshevIPoles = (N, omega_c, epsilon = 0.2) => {
     const poles = [];
-    const beta = (1/N) * Math.asinh( 1 / epsilon);
+
+    const beta = (1 / N) * Math.asinh(1 / epsilon);
     const sigma = Math.sinh(beta);
     const omega = Math.cosh(beta);
-    for (let i = 1; i <= N; i++) {
-        const theta = (Math.PI/2)*(2*i-1)/N;
-        const x = -omega_c * sigma * Math.sin(theta);
-        const y =  omega_c * omega  * Math.cos(theta);
-        poles.push(complex(x, y));
+
+    for (let k = 1; k <= N; k++) {
+        const theta = (Math.PI * (2*k - 1)) / (2 * N);
+
+        // normalized prototype pole
+        const re = -sigma * Math.sin(theta);
+        const im =  omega * Math.cos(theta);
+
+        // now apply cutoff
+        poles.push(complex(omega_c * re, omega_c * im));
     }
+
     return poles;
-}
+};
 
 export const H_of_s = (poles, Omega_c, type) => {
     let convRes = [];

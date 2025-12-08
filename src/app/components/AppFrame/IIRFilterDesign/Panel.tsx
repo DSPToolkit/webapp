@@ -6,6 +6,7 @@ export const Panel = ({ trigger, updateTrigger,
     chosenMethod, updateChosenMethod,
     filterOrder, updateFilterOrder,
     lowCutoff, highCutoff,
+    chebyshevEpsilonFactor, updateChebyshevEpsilonFactor,
     updateLowCutoff, updateHighCutoff
 }) => {
 
@@ -17,11 +18,10 @@ export const Panel = ({ trigger, updateTrigger,
 
     return (
         <div className="flex flex-col justify-between h-screen h-48 bg-gray-50 p-2 my-5 mx-2 rounded-2xl shadow-md" style={{ height: '322px', width: '515px' }}>
-
             <div className="mx-4 my-5">
                 <div id="content">
                     <div className="flex items-center">
-                        <label>Filter Type: </label>
+                        <label>Filter Type:</label>
                         <div className="relative mx-2">
                             <button onClick={toggleFilterTypeDropdown} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700">
                                 {chosenFilterType}
@@ -38,7 +38,7 @@ export const Panel = ({ trigger, updateTrigger,
                 </div>
 
                 <div className="flex items-center mt-5">
-                    <label>Design Method: </label>
+                    <label>Design Method:</label>
                     <div className="relative mx-2">
                         <button onClick={toggleMethodDropdown} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700 w-32">
                             {chosenMethod}
@@ -46,15 +46,30 @@ export const Panel = ({ trigger, updateTrigger,
                         {methodDropdownIsOpen && (
                             <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg">
                                 <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => { updateChosenMethod(IIRfilterDesignMethod.BUTTERWORTH); toggleMethodDropdown(); } }>Butterworth</a>
-                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => { updateChosenMethod(IIRfilterDesignMethod.CHEBYCHEV); toggleMethodDropdown(); } }>Chebychev</a>
+                                <a className="z-0 my-0.5 w-24 cursor-pointer" onClick={() => { updateChosenMethod(IIRfilterDesignMethod.CHEBYSHEV); toggleMethodDropdown(); } }>Chebyshev</a>
                             </div>
                         )}
                     </div>
                 </div>
+
+                <div className="flex">
+                    <div className="mr-5">
+                        <label>Filter Order:</label>
+                        <input className="rounded-lg shadow p-1 my-4 w-32 mx-1" onChange={(e) => updateFilterOrder(Number(e.target.value))} value={filterOrder} placeholder="Number" type="number" min="1"></input>
+                    </div>
+                    { chosenMethod == IIRfilterDesignMethod.CHEBYSHEV &&
+                    <div>
+                        <label>Epsilon</label>
+                        <input className="rounded-lg shadow p-1 my-4 w-32 mx-1" onChange={(e) => updateChebyshevEpsilonFactor(Number(e.target.value))} value={chebyshevEpsilonFactor} placeholder="Ripple factor" type="number" step="0.01" min="0.00001"></input>
+                    </div>   
+                    }
+                        
+                </div>
+
                 {chosenFilterType == "Low-pass" &&
                     <div className="mt-2">
                         <label>Cuttoff Freq:</label>
-                        <input className="rounded-lg shadow p-1 my-3 w-32 mx-1" onChange={(e) => updateLowCutoff(Number(e.target.value))} value={lowCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
+                        <input className="rounded-lg shadow p-1 w-32 mx-1" onChange={(e) => updateLowCutoff(Number(e.target.value))} value={lowCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
                     </div>
                 }
 
@@ -71,14 +86,9 @@ export const Panel = ({ trigger, updateTrigger,
                         <input className="rounded-lg shadow p-1 my-3 w-32 mx-1 mr-5" onChange={(e) => updateLowCutoff(Number(e.target.value))} value={lowCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
                         <label>High freq:</label>
                         <input className="rounded-lg shadow p-1 my-3 w-32 mx-1" onChange={(e) => updateHighCutoff(Number(e.target.value))} value={highCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
-
                     </div>
                 }
 
-                <div>
-                    <label>Filter Order:</label>
-                    <input className="rounded-lg shadow p-1 my-2 w-32 mx-1" onChange={(e) => updateFilterOrder(Number(e.target.value))} value={filterOrder} placeholder="Number" type="number" min="1"></input>
-                </div>
             </div>
 
             <div className="text-center text-lg pb-4">
