@@ -12,10 +12,6 @@ export const Periodogram = () => {
         yValues: Array.from({ length: 1024 }, (_, i) => 0)
     });
 
-    const [phaseResponse, setPhaseResponse] = useState({
-        xValues: Array.from({ length: 50 }, (_, i) => i / 50 * Math.PI),
-        yValues: Array.from({ length: 50 }, (_, i) => 0)
-    });
 
     const findTheNextPowerOfTwoBiggerThanX = (x : number) => {
         let v = 1;
@@ -56,7 +52,7 @@ export const Periodogram = () => {
                 <Plot
                     title="Magnitude"
                     x_axis_label="w (rad)"
-                    y_axis_label="|H(jw)|"
+                    y_axis_label="|H^2(jw)|"
                     dataToPlot={magnitudeResponse}
                     plotColor={"rgba(75, 192, 192, 1)"} />
             </div>
