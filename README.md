@@ -12,14 +12,14 @@ After designing a fitler, the web app:
 - Visualizes the filter's output on different input signals.
 
 ## Getting Started
-To use the app, simply visit [forgedsp.github.io/filter-designer](https://forgedsp.github.io/filter-designer).
+To use the app, simply visit [forgedsp.github.io/webapp](https://forgedsp.github.io/webapp).
 Alternatively, to install and run the app locally, make sure you have a recent version of [Node](https://nodejs.org/en) installed.
 Afterwards:
 
 - Clone the repository:
 ```shell
-git clone git@github.com:ForgeDSP/filter-designer.git
-cd filter-designer
+git clone git@github.com:ForgeDSP/webapp.git
+cd webapp
 ```
 - Install the dependencies:
 ```shell
