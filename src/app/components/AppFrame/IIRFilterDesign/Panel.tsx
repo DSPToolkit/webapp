@@ -76,7 +76,7 @@ export const Panel = ({ trigger, updateTrigger,
                 {chosenFilterType == "High-pass" &&
                     <div className="mt-2">
                         <label>Cuttoff Freq:</label>
-                        <input className="rounded-lg shadow p-1 my-3 w-32 mx-1" onChange={(e) => updateLowCutoff(Number(e.target.value))} value={lowCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
+                        <input className="rounded-lg shadow p-1 w-32 mx-1" onChange={(e) => updateLowCutoff(Number(e.target.value))} value={lowCutoff} placeholder="Rad/Samples" type="number" step="0.01" max="3.14" min="0"></input>
                     </div>
                 }
 

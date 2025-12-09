@@ -6,7 +6,6 @@ import FFT from 'fft.js';
 
 export const Periodogram = () => {
     const [data, setData] = useState([]);
-
     const [magnitudeResponse, setMagnitudeResponse] = useState({
         xValues: Array.from({ length: 1024 }, (_, i) => i / 1024 * Math.PI),
         yValues: Array.from({ length: 1024 }, (_, i) => 0)
@@ -39,7 +38,7 @@ export const Periodogram = () => {
     }
 
     useEffect(() => {
-        if(data.length > 0)
+        if(data && data.length > 0)
             computePeriodogram();
     }, [data]);
 
