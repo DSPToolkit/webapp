@@ -59,15 +59,14 @@ export default function Home() {
         {items.map((item, index) => {
         if (item.name === "prompt") {
           return (
-            <div className="mt-auto" key={`prompt-${item.name}-${index}`}>
               <button
+                key={`prompt-${item.name}-${index}`}
                 className={`flex mt-auto h-10 p-2 text-sm rounded w-48 
                   ${selectedItem.name === item.name ? "bg-white hover:bg-gray-50 shadow" : ""}`}
                 onClick={() => setSelectedItem(item)}
               >
                 <p className="font-bold">{item.placeholder}</p>
               </button>
-            </div>
           );
         }  else if (item.name === "seperator") {
           return (
@@ -89,7 +88,7 @@ export default function Home() {
 
       </aside>
       {/* Main app */}
-      <main>
+      <main className="flex-grow">
         {addComponent()}
       </main>
   </div>
