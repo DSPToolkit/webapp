@@ -33,7 +33,9 @@ const noise = (
     return out;
 };
 
-const functionCalls = {
+type Func = (...args: number[]) => number[];
+
+const functionCalls: Record<string, { re: RegExp; fn: Func }> = {
     sine: {
         re: /^sin\s*\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*\)$/,
         fn: sine
@@ -41,9 +43,8 @@ const functionCalls = {
     noise: {
         re: /^noise\s*\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*\)$/,
         fn: noise
-    },
+    }
 };
-
 const evalNumber = (str: string) => {
     const expr = str.replace(/pi/gi, String(Math.PI));
     return Function(`"use strict"; return (${expr})`)();
@@ -56,9 +57,10 @@ const execCall = (token: string) => {
         if (!m) continue;
 
         const args = m.slice(1)
-                      .filter(Boolean)
-                      .map(a => evalNumber(a.trim()));
-        return fn(...args);
+            .filter(Boolean)
+            .map(a => evalNumber(a.trim()));
+            
+        fn(...args);
     }
     throw new Error("Unknown call: " + token);
 };
