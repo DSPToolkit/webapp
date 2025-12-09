@@ -1,15 +1,27 @@
-# ForgeDSP filter designer web app
-A web app for designing and visualizing [digital filters](https://en.wikipedia.org/wiki/Digital_filter).
-In the current version, a filter can be designed via:
-- Visually placing poles and zeros on a Z-plane.
-- Windowing method.
-- Analog-to-digital transformation (IIR filter) using Butterworth and Chebyshev.
-- Weighted least squares (linear phase FIR filter).
+# ForgeDSP web app
+A digital signal processing (DSP) application for designing filters, estimating spectra, generating waveforms, and more.
 
-After designing a fitler, the web app:
-- Computes the the magnitude and phase of the filter’s frequency response.
-- Generates the filter coefficients.
-- Visualizes the filter's output on different input signals.
+## Filter Design
+The application supports designing digital filters using several methods:
+
+- Visually placing poles and zeros on the Z-plane
+- Windowing methods for FIR filter design
+- Analog-to-digital IIR filter design using Butterworth and Chebyshev prototypes
+- Weighted least-squares design of linear-phase FIR filters
+
+After a filter is designed, the application:
+
+- Computes and displays the magnitude and phase of the frequency response
+- Generates the corresponding filter coefficients
+- Simulates and visualizes the filter’s output on user-selected input signals
+
+## Spectral Estimation
+
+The application supports periodogram estimation. Users can:
+- upload a signal from a file, or
+- write expressions to generate signals directly.
+
+
 
 ## Getting Started
 To use the app, simply visit [forgedsp.github.io/webapp](https://forgedsp.github.io/webapp).
