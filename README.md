@@ -6,7 +6,7 @@ The application supports designing digital filters using several methods:
 
 - Visually placing poles and zeros on the Z-plane
 - Windowing methods for FIR filter design
-- Analog-to-digital IIR filter design using Butterworth and Chebyshev prototypes
+- Analog-to-digital IIR filter design using Butterworth and Chebyshev filters
 - Weighted least-squares design of linear-phase FIR filters
 
 After a filter is designed, the application:
