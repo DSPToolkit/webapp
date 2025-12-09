@@ -45,7 +45,7 @@ const functionCalls = {
 };
 
 const evalNumber = (str: string) => {
-    const expr = str.replace(/pi/gi, Math.PI);
+    const expr = str.replace(/pi/gi, String(Math.PI));
     return Function(`"use strict"; return (${expr})`)();
 };
 
