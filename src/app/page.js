@@ -16,7 +16,7 @@ export default function Home() {
     { placeholder: "Linear phase FIR-LS", name: "least_square_linear_phase_FIR" },
     { placeholder: "separator", name: "seperator" },
     { placeholder: "Periodogram Estimation", name: "periodogram" },
-    { placeholder: "Welch's Estimatation", name: "welchs_estimate" },
+    { placeholder: "Welch's method", name: "welchs_estimate" },
     { placeholder: "> Interactive Prompt", name: "prompt" },
     { placeholder: "Help?", name: "help" }
   ];
