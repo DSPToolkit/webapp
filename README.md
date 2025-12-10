@@ -17,12 +17,12 @@ After a filter is designed, the application:
 
 ## Spectral Estimation
 
-For spectrum estimation, the user can:
+For spectrum estimation, the app can receive:
 
-- upload a signal from a file, or
-- write expressions to generate signals directly.
+- a signal from a file, or
+- an expressions to generate signals directly.
 
-The application can then estimates the spectrum by estimating the periodogram or its Welch estimate.
+Afterwards, estimation of the power spectrum desnsity can get computed via periodogram or Welch's method.
 
 
 ## Getting Started
