@@ -6,6 +6,7 @@ import { IIRFilterDesign } from './components/AppFrame/IIRFilterDesign/IIRFilter
 import { LeastSqaureLinearPhaseFIRDesign } from './components/AppFrame/LeastSquareLinearPhaseFIRDesign/LeastSqaureLinearPhaseFIRDesign';
 import { Periodogram } from './components/AppFrame/Periodogram/Periodogram';
 import { Prompt } from './components/AppFrame/Prompt/Prompt';
+import { WelchsEstimate } from './components/AppFrame/WelchsEstimate/WelchsEstimate';
 
 export default function Home() {
   const items = [
@@ -14,7 +15,8 @@ export default function Home() {
     { placeholder: "Analog-to-digital transform", name: "iir_filter_design" },
     { placeholder: "Linear phase FIR-LS", name: "least_square_linear_phase_FIR" },
     { placeholder: "separator", name: "seperator" },
-    { placeholder: "Periodogram", name: "periodogram" },
+    { placeholder: "Periodogram Estimation", name: "periodogram" },
+    { placeholder: "Welch's Estimatation", name: "welchs_estimate" },
     { placeholder: "> Interactive Prompt", name: "prompt" },
     { placeholder: "Help?", name: "help" }
   ];
@@ -33,6 +35,8 @@ export default function Home() {
         return <LeastSqaureLinearPhaseFIRDesign />;
       case "periodogram":
         return <Periodogram />
+      case "welchs_estimate":
+        return <WelchsEstimate />
       case "prompt":
         return <Prompt />;
       case "help":

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { signalExprParser } from '../Common/SignalExpressionParser';
 
-export const Panel = ({ data, updateData,
+export const Panel = ({ data, updateData, showInDbScale, updateShowInDbScale
 }) => {
-    const [trigger, updateTrigger] = useState(false);
     const [textboxText, updateTextboxText] = useState("");
     const METHODS = { fileupload: "File upload", expression: "Expression" }
     const [method, setMethod] = useState(METHODS.fileupload);
@@ -45,20 +44,18 @@ export const Panel = ({ data, updateData,
     return (
         <div className="flex flex-col h-screen h-48 bg-gray-50 p-2 my-5 mx-2 rounded-2xl shadow-md" style={{ height: '322px', width: '515px' }}>
             <div className="flex justify-between flex-1 mx-5 my-1 mt-8">
-                <div>
-                    <div className="flex items-center">
-                        <label>Input Type: </label>
-                        <div className="relative mx-2">
-                            <button onClick={togglePopup} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700">
-                                {method}
-                            </button>
-                            {popupOpen && (
-                                <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg z-10">
-                                    <a onClick={() => { setMethod(METHODS.fileupload); togglePopup(); }} className="my-0.5 w-24 cursor-pointer">File Upload</a>
-                                    <a onClick={() => { setMethod(METHODS.expression); togglePopup(); }} className="my-0.5 w-24 cursor-pointer">Expression</a>
-                                </div>
-                            )}
-                        </div>
+                <div className="flex items-center">
+                    <label>Input Type: </label>
+                    <div className="relative mx-2">
+                        <button onClick={togglePopup} className="p-2 bg-slate-900 text-white rounded-lg hover:bg-gray-700">
+                            {method}
+                        </button>
+                        {popupOpen && (
+                            <div className="absolute flex flex-col bg-white p-3 shadow  rounded-lg z-10">
+                                <a onClick={() => { setMethod(METHODS.fileupload); togglePopup(); }} className="my-0.5 w-24 cursor-pointer">File Upload</a>
+                                <a onClick={() => { setMethod(METHODS.expression); togglePopup(); }} className="my-0.5 w-24 cursor-pointer">Expression</a>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="relative group">
@@ -76,7 +73,7 @@ export const Panel = ({ data, updateData,
                     <div>
                         Please upload a .csv or .txt file where the values of the signal are separated by spaces, commas, or newlines.
                         <br></br><br></br>
-                        After uploading the file, the periodogram of the signal will be computed and shown on the graph.
+                        Rectangular window is asssumed to be applied to the sequence before applying FFT.
                     </div>
                     <div className="flex my-5">
                         <span className="pr-5 mt-2" >Upload file:</span>
@@ -90,7 +87,20 @@ export const Panel = ({ data, updateData,
                             <div className="px-4 w-32 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition">
                                 <span>Choose File</span>
                             </div>
+
                         </label>
+                        <div className="my-2 mx-7">
+                            <label>
+                                <input
+                                    className="mx-2 select-none"
+                                    type="checkbox"
+                                    checked={showInDbScale}
+                                    onChange={(_) => updateShowInDbScale(!showInDbScale)}
+                                />
+                                <span className="text-gray-900 dark:text-white">Show in Db Scale</span>
+
+                            </label>
+                        </div>
                     </div>
                 </div>
             }
@@ -101,7 +111,7 @@ export const Panel = ({ data, updateData,
                     <input
                         className="p-2 border-2 border-solid rounded-md"
                         type="text"
-                        onChange={ (e) => updateTextboxText(e.target.value) } />
+                        onChange={(e) => updateTextboxText(e.target.value)} />
 
                     <div className="flex my-5 justify-center">
                         <label className="cursor-pointer">

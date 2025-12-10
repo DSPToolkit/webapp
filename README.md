@@ -17,10 +17,12 @@ After a filter is designed, the application:
 
 ## Spectral Estimation
 
-The application supports periodogram estimation. Users can:
+For spectrum estimation, the user can:
+
 - upload a signal from a file, or
 - write expressions to generate signals directly.
 
+The application can then estimates the spectrum by estimating the periodogram or its Welch estimate.
 
 
 ## Getting Started

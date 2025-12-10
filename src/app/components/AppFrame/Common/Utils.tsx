@@ -223,10 +223,6 @@ export const countNumberOfOccurrences = (str, c) => {
     return str.split(c).length - 1;
 }
 
-export const eulers_integration = () => {
-    return;
-}
-
 export const lowPassImpulseResponse = (cutOffFreq: number, N: number = 1024) => {
     let array = new Array(N).fill(0);
     for (let i = 0; i < N; i++) {
@@ -284,6 +280,15 @@ export const Hamming = (M: number): number[] => {
         array[i] = 0.54 - 0.46 * Math.cos((2 * Math.PI * i) / (M - 1))
     }
     return array;
+}
+
+export const RectangleWindow = (M: number): number[] => {
+    let array = new Array(M);
+    for (let i = 0; i < M; i++) {
+        array[i] = 1;
+    }
+    return array;
+
 }
 
 export const Bartlett = (M: number): number[] => {
