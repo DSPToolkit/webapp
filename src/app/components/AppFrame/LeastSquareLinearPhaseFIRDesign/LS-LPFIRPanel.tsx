@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Infobox from '../../ui/Infobox';
 
 export const LS_LPFIRPanel = ({ trigger, updateTrigger,
     filterSize, updateFilterSize,
@@ -89,17 +90,8 @@ export const LS_LPFIRPanel = ({ trigger, updateTrigger,
 
                     </div>
                 </div>
-
-                <div className="relative my-4 mx-2 group ml-2">
-                    <button className="w-11 h-11 bg-gray-200 text-black text-lg rounded-full hover:bg-gray-300">
-                        ?
-                    </button>
-                    <div className="pointer-events-none z-50 absolute right-0 top-12 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                        Enter normalized frequency ranges and their corresponding amplitudes as pairs, along with their weights.
-                        <br></br>
-                        Ex: Freq = [0 0.2 0.8 1], Amp = [1 1 0 0], and Weight = [10 1] defines a lowpass filter with unity gain from 0-0.2 and zero elsewhere, with more weight given to the passband.
-                    </div>
-                </div>
+                <Infobox text="Enter normalized frequency ranges and their corresponding amplitudes as pairs, along with their weights.
+                               Ex: Freq = [0 0.2 0.8 1], Amp = [1 1 0 0], and Weight = [10 1] defines a lowpass filter with unity gain from 0-0.2 and zero elsewhere, with more weight given to the passband." />
 
             </div>
             <div className="text-center text-lg pb-4">

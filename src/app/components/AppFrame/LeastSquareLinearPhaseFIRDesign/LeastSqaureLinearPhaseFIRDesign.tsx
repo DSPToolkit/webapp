@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { Plot } from '../Common/Plot'
 import FFT from 'fft.js';

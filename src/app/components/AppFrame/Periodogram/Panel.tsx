@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { signalExprParser } from '../Common/SignalExpressionParser';
+import Infobox from '../../ui/Infobox';
 
 export const Panel = ({ data, updateData, showInDbScale, updateShowInDbScale
 }) => {
@@ -58,14 +59,7 @@ export const Panel = ({ data, updateData, showInDbScale, updateShowInDbScale
                         )}
                     </div>
                 </div>
-                <div className="relative group">
-                    <button className="w-11 h-11 bg-gray-200 text-black text-lg rounded-full hover:bg-gray-300">
-                        ?
-                    </button>
-                    <div className="pointer-events-none z-50 absolute right-0 top-10 w-80 bg-black text-white text-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                        The signal you wish to compute Periodogram for can be received by uploading a data file or writing its expression.
-                    </div>
-                </div>
+                <Infobox text="The signal you wish to compute Periodogram for can be received by uploading a data file or writing its expression." />
             </div>
             {
                 method == METHODS.fileupload &&
