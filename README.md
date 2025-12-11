@@ -1,5 +1,5 @@
 # ForgeDSP web app
-A digital signal processing (DSP) application for designing filters, estimating power spectral density, generating waveforms, and more.
+An interactive digital signal processing (DSP) application for designing filters, estimating power spectral density, generating waveforms, and more.
 
 ## Filter Design
 The application supports designing digital filters using several methods:
