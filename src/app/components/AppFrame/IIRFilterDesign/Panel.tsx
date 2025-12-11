@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { filterType, IIRfilterDesignMethod } from '../Common/enums';
+import Button from '../../ui/Button';
 
 export const Panel = ({ trigger, updateTrigger,
     chosenFilterType, updateChoosenFilterType,
@@ -90,10 +91,7 @@ export const Panel = ({ trigger, updateTrigger,
                 }
 
             </div>
-
-            <div className="text-center text-lg pb-4">
-                <button onClick={() => updateTrigger(!trigger)} className={`h-10 text-sm mx-2 px-6 bg-indigo-600 rounded-lg text-white p-2 hover:bg-blue-800`}>Design Filter</button>
-            </div>
+            <Button text='Design Filter' onClick={() => updateTrigger(!trigger)} />
         </div >
     )
 }

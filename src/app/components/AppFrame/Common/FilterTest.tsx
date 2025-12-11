@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react'
+"use client";
+import React, { useEffect, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import { ConfigurePopup } from './ConfigurePopup';
+import { filter } from './Utils';
+import Button from '../../ui/Button';
 
 export const FilterTest = ({ filterCoefficients }) => {
   const [filteredOutput, setFilteredOutput] = useState([]);
@@ -10,6 +13,16 @@ export const FilterTest = ({ filterCoefficients }) => {
   const [noiseMean, setNoiseMean] = useState<number>(1.0);
   const [noiseStandardDeviation, setNoiseStandardDeviation] = useState<number>(0.1);
   const [signalPeak, setSignalPeak] = useState<number>(1.0);
+
+  const [testAudio, setTestAudio] = useState(false);
+  const [audioCtx, setAudioCtx] = useState<AudioContext | null>(() => {
+    if (typeof window !== "undefined") {
+      // only runs in browser. This prevents seeing error on cli.
+      return new (window.AudioContext)();
+    }
+    return null;
+  }); const [outBuffer, setOutBuffer] = useState(null);
+  const audioRef = useRef(null); // to be able to stop music after it's played
 
   const toggleConfigurePopup = () => {
     setIsConfigurePopupOpen(!isConfigurePopupOpen);
@@ -180,34 +193,6 @@ export const FilterTest = ({ filterCoefficients }) => {
     return output;
   }
 
-
-  const filter = (signal, filterCoefficients) => {
-    const y_buffer = new Array(filterCoefficients.den.length).fill(0);
-    let result = [];
-
-    for (let i = 0; i < signal.length; i++) {
-      let x_term_sums = 0;
-      for (let j = 0; j < filterCoefficients.num.length; j++) {
-        x_term_sums += filterCoefficients.num[j] * (i - j < 0 ? 0 : signal[i - j]);
-      }
-
-      let y_term_sums = 0;
-      for (let j = 1; j < filterCoefficients.den.length; j++) {
-        y_term_sums += filterCoefficients.den[j] * (i - j < 0 ? 0 : y_buffer[j - 1]);
-      }
-      const output = x_term_sums - y_term_sums;
-
-      for (let j = y_buffer.length - 1; j > 0; j--) {
-        y_buffer[j] = y_buffer[j - 1];
-      }
-      y_buffer[0] = output;
-
-      result.push(output);
-    }
-
-    return result;
-  };
-
   const plotOutput = (inputSignal, filterCoefficients) => {
     const filteredOutput = filter(inputSignal, filterCoefficients);
     setFilteredOutput(filteredOutput);
@@ -235,6 +220,51 @@ export const FilterTest = ({ filterCoefficients }) => {
 
   }
 
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const arrayBuffer = await file.arrayBuffer();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    const input = audioBuffer.getChannelData(0);
+
+    // Filter
+    const output = filter(input, filterCoefficients);
+
+    // Normalize output
+    let peak = 0;
+    for (let i = 0; i < output.length; i++) {
+      if (Math.abs(output[i]) > peak) peak = Math.abs(output[i]);
+    }
+    const scale = peak > 0 ? 1 / peak : 1; // ensures not doing 1/0
+    const normalizedOutput = output.map(s => s * scale);
+
+    const outBuffer = audioCtx.createBuffer(
+      1,
+      normalizedOutput.length,
+      audioBuffer.sampleRate
+    );
+    outBuffer.copyToChannel(new Float32Array(normalizedOutput), 0);
+    setOutBuffer(outBuffer);
+  };
+
+  const playMusicHandle = () => {
+    if (audioRef.current) {
+      audioRef.current.stop();
+      audioRef.current.disconnect();
+      audioRef.current = null;
+    } else {
+      const src = audioCtx.createBufferSource();
+      src.buffer = outBuffer;
+      src.connect(audioCtx.destination);
+      audioRef.current = src;
+      src.start();
+      console.log("Done!");
+    }
+
+  }
+
   useEffect(() => {
     if (filterCoefficients.den.length == 0 && filterCoefficients.num.length == 0)
       plot("no_signal", filterCoefficients, addNoiseChecked);
@@ -252,40 +282,121 @@ export const FilterTest = ({ filterCoefficients }) => {
 
   return (
     <div className='bg-gray-50 p-2 my-5 mx-2 rounded-2xl shadow-md' style={{ height: '475px', width: '515px' }}>
+      {testAudio && (
+        <div>
+          <div className="flex col h-[310px] justify-center mt-[100px]">
+            <div className="p-4">
+              <h2 className="text-lg font-semibold mb-3">Select a WAV file</h2>
+              <input
+                type="file"
+                accept="audio/wav"
+                onChange={handleFile}
+                className="text-sm text-gray-700 border border-gray-300 rounded-md p-2 mb-4 cursor-pointer
+                            bg-white hover:bg-gray-50
+                            focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400
+                            transition-colors duration-150"
+              />
 
-      <Line className="mx-2" data={data} options={options} height={200} />
-      <div className="my-4">
-        <div className="flex">
-          <button value="sine" onClick={handleTestSignalSelect} className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["sine"] ? 'bg-slate-500 text-white' : 'bg-slate-200 text-black'}  rounded-lg hover:bg-gray-400`}>Sine</button>
-          <button value="delta" onClick={handleTestSignalSelect} className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["delta"] ? 'bg-slate-500 text-white' : 'bg-slate-200'} rounded-lg hover:bg-gray-400`}>Delta</button>
-          <button value="square" onClick={handleTestSignalSelect} className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["square"] ? 'bg-slate-500 text-white' : 'bg-slate-200 text-black'} rounded-lg hover:bg-gray-400`}>Square</button>
-          <button value="triangle" onClick={handleTestSignalSelect} className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["triangle"] ? 'bg-slate-500 text-white' : 'bg-slate-200 text-black'} rounded-lg hover:bg-gray-400`}>Triangle</button>
-          <button value="configure" onClick={toggleConfigurePopup} className={`h-10 my-2 text-sm mx-2 px-5 bg-black text-white rounded-lg hover:bg-gray-800`}>Configure</button>
-          <ConfigurePopup
-            isOpen={isConfigurePopupOpen}
-            onClose={toggleConfigurePopup}
-            peak={signalPeak}
-            noiseMean={noiseMean}
-            noiseSd={noiseStandardDeviation}
-            updatePeak={(e) => setSignalPeak((prev) => e)}
-            updateMean={(e) => setNoiseMean((prev) => e)}
-            updateSd={(e) => setNoiseStandardDeviation((prev) => e)}
-          />
+              <Button onClick={playMusicHandle} text="Play" />
+            </div>
+
+          </div>
+          <div className="flex justify-between">
+            <div className="mt-2 ml-1">
+            </div>
+            <Button text="Test Audio" onClick={() => { setTestAudio(!testAudio) }} color="gray" />
+
+          </div>
+        </div>
+      )}
+      {!testAudio && (
+        <div>
+          <Line className="mx-2" data={data} options={options} height={200} />
+          <div className="my-4">
+            <div className="flex">
+              <button
+                value="sine"
+                onClick={handleTestSignalSelect}
+                className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["sine"]
+                  ? "bg-slate-500 text-white"
+                  : "bg-slate-200 text-black"
+                  } rounded-lg hover:bg-gray-400`}
+              >
+                Sine
+              </button>
+
+              <button
+                value="delta"
+                onClick={handleTestSignalSelect}
+                className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["delta"]
+                  ? "bg-slate-500 text-white"
+                  : "bg-slate-200 text-black"
+                  } rounded-lg hover:bg-gray-400`}
+              >
+                Delta
+              </button>
+
+              <button
+                value="square"
+                onClick={handleTestSignalSelect}
+                className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["square"]
+                  ? "bg-slate-500 text-white"
+                  : "bg-slate-200 text-black"
+                  } rounded-lg hover:bg-gray-400`}
+              >
+                Square
+              </button>
+
+              <button
+                value="triangle"
+                onClick={handleTestSignalSelect}
+                className={`h-10 my-2 text-sm mx-2 px-5 ${selectedTestSignals["triangle"]
+                  ? "bg-slate-500 text-white"
+                  : "bg-slate-200 text-black"
+                  } rounded-lg hover:bg-gray-400`}
+              >
+                Triangle
+              </button>
+
+              <button
+                value="configure"
+                onClick={toggleConfigurePopup}
+                className="h-10 my-2 text-sm mx-2 px-5 bg-black text-white rounded-lg hover:bg-gray-800"
+              >
+                Configure
+              </button>
+
+              <ConfigurePopup
+                isOpen={isConfigurePopupOpen}
+                onClose={toggleConfigurePopup}
+                peak={signalPeak}
+                noiseMean={noiseMean}
+                noiseSd={noiseStandardDeviation}
+                updatePeak={(e) => setSignalPeak(e)}
+                updateMean={(e) => setNoiseMean(e)}
+                updateSd={(e) => setNoiseStandardDeviation(e)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="mt-2 ml-1">
+              <label>
+                <input
+                  className="mx-2 select-none"
+                  type="checkbox"
+                  checked={addNoiseChecked}
+                  onChange={handleAddNoise}
+                />
+                <span className="text-gray-900 dark:text-white">Add Gaussian Noise</span>
+              </label>
+            </div>
+            <Button text="Test Audio" onClick={() => { setTestAudio(!testAudio) }} color="gray" />
+
+          </div>
+
         </div>
 
-        <div className="my-3">
-          <label>
-            <input
-              className="mx-2 select-none"
-              type="checkbox"
-              checked={addNoiseChecked}
-              onChange={handleAddNoise}
-            />
-            <span className="text-gray-900 dark:text-white">Add Gaussian Noise</span>
-
-          </label>
-        </div>
-      </div>
+      )}
     </div>
 
   );

@@ -42,7 +42,7 @@ export const parse = (cmd, log, updateLog, updateCmd) => {
 const help = (log, updateLog) => {
     const text = [
         "\n",
-        "DSPToolkit version 0.2",
+        "ForgeDSP version 0.2",
         "Available commands:",
         "\t 'help' - Shows the help message",
         "\t 'version' - Shows the web apps version",

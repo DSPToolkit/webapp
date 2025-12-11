@@ -49,7 +49,7 @@ export const Periodogram = () => {
     }, [data, showInDbScale]);
 
     return (
-        <div className="flex flex-col flex-1 items-stretch justify-center">
+        <div className="flex flex-col flex-1 items-stretch">
             <div className="flex">
                 <Panel
                     data={data} updateData={(e) => setData(e)}

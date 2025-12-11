@@ -96,8 +96,8 @@ export const WelchsEstimate = () => {
     }, [data, showInDbScale]);
 
     return (
-        <div className="flex flex-1 items-stretch justify-center">
-            <div className="flex flex">
+        <div className="flex flex-1 items-stretch">
+            <div className="flex">
                 <Panel
                     data={data} updateData={(e) => setData(e)}
                     segmentLength={segmentLength} updateSegmentLength={(e) => setSegmentLength(e)}

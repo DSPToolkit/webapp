@@ -74,7 +74,7 @@ export default function Home() {
           );
         }  else if (item.name === "seperator") {
           return (
-            <div className="h-px bg-gray-300 my-1 px-2"  key="seperator"></div>
+            <div className="h-px bg-gray-300 my-2 w-full" key="separator"></div>
           );
         } else {
           return (

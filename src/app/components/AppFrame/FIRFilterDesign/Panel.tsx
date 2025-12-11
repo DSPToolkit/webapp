@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { windowType, filterType } from './enums';
+import Button from '../../ui/Button';
 
 export const Panel = ({ trigger, updateTrigger,
     chosenFilterType, updateChoosenFilterType,
@@ -90,10 +91,7 @@ export const Panel = ({ trigger, updateTrigger,
                 <label>Filter Size:</label>
                 <input className="rounded-lg shadow p-1 my-3 w-32 mx-1" onChange={(e) => updateFilterSize(Number(e.target.value))} value={filterSize} placeholder="Size" type="number" min="0" max="1000"></input>
             </div>
-
-            <div className="text-center text-lg pb-4">
-                <button onClick={() => updateTrigger(!trigger)} className={`h-10 my-2 text-sm mx-2 px-6 bg-indigo-600 rounded-lg text-white p-2 hover:bg-blue-800`}>Design Filter</button>
-            </div>
+            <Button text='Design Filter' onClick={() => updateTrigger(!trigger)} />
         </div >
     )
 }

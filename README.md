@@ -22,7 +22,7 @@ For spectrum estimation, the app can receive:
 - a signal from a file, or
 - an expressions to generate signals directly.
 
-Afterwards, estimation of the power spectrum desnsity can get computed via periodogram or Welch's method.
+Afterwards, the app estimates power spectrum desnsity (PSD) via periodogram or Welch's method.
 
 
 ## Getting Started
