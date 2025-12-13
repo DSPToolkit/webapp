@@ -26,7 +26,7 @@ Afterwards, the app estimates power spectrum desnsity (PSD) via periodogram or W
 
 
 ## Getting Started
-To use the app, simply visit [beam-js.github.io/webapp](https://beam-js.github.io/webapp).
+To use the app, simply visit [beamdsp.github.io/webapp](https://beamdsp.github.io/webapp).
 Alternatively, to install and run the app locally, make sure you have a recent version of [Node](https://nodejs.org/en) installed.
 Afterwards:
 
